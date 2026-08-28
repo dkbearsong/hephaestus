@@ -1,0 +1,53 @@
+# Hephaestus User Preferences & System Configuration
+
+# Coding Agent Harness Configuration
+harness:
+  # Active harness adapter: 'antigravity_daemon' | 'langgraph_agent'
+  active: "antigravity_daemon"
+  
+  antigravity_daemon:
+    headless_mode: true
+    remote_control: true
+    socket_path: "/var/run/antigravity.sock"
+    default_model: "gemini-3.7-flash"
+    timeout_seconds: 600
+    # Autonomy boundaries
+    auto_execute_commands: true
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "pypi.org"
+      - "registry.npmjs.org"
+
+  langgraph_agent:
+    model: "gemini-3.7-flash"
+    max_iterations: 25
+    checkpoint_storage: "postgres" # 'postgres' | 'memory'
+
+# Jira Webhook and Integration Settings
+jira:
+  trigger_label: "ai-code"
+  new_project_trigger_prefix: "<|prompt-new|>"
+  update_trigger_prefix: "<|prompt|>"
+  completion_label: "ai-merged"
+  auto_remove_trigger_label: true
+  transition_on_merge: "Done" # Jira workflow status to transition to on branch merge
+
+# Docker Sandbox & Isolation Settings
+docker:
+  default_base_image: "python:3.12-slim"
+  container_prefix: "hephaestus_"
+  checkpoint_image_prefix: "hephaestus-checkpoint:"
+  workspace_dir_inside_container: "/workspace"
+  auto_commit_on_pause: true
+  auto_prune_on_merge: true
+  memory_limit: "4g"
+  cpu_limit: 2.0
+
+# Model Context Protocol (MCP) Tools Registry
+# Place tools inside the `mcp_tools/` folder. Add tool identifiers here to activate them.
+mcp_tools:
+  tools_directory: "mcp_tools"
+  enabled:
+    - "postgres_inspector"
+    - "test_runner"
