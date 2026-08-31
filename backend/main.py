@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException, Query
+import json
+from fastapi import FastAPI, Depends, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
@@ -7,10 +8,20 @@ from backend.database.search import search_full_text
 from backend.database.connection import get_db, SessionLocal
 from backend.database.models import Project, Ticket, WorkLog, ChatMessage, AgentNotification
 from backend.jira_service.client import jira_service
+from backend.watcher.webhook_watcher import (
+    webhook_watcher,
+    FormattedWebhookPayload,
+    WebhookPayloadFormatter,
+    WebhookSecretVerificationError
+)
+
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("hephaestus.api")
+
+# Connect webhook watcher to workflow engine
+webhook_watcher.pipeline_engine = workflow_engine
 
 app = FastAPI(title="Hephaestus Coding Agent Harness Backend", version="1.0.0")
 
@@ -41,14 +52,120 @@ def health_check():
     return {"status": "ok", "service": "hephaestus_python_core"}
 
 @app.post("/api/pipeline/webhook")
-def process_webhook(payload: WebhookPayload):
+async def process_webhook(payload: WebhookPayload, request: Request):
+    headers = dict(request.headers)
+    try:
+        formatted = webhook_watcher.receive_webhook(payload.model_dump(), headers=headers)
+    except WebhookSecretVerificationError as exc:
+        raise HTTPException(status_code=401, detail=str(exc))
+
+    if not formatted.is_ai_trigger:
+        return {"success": False, "reason": "No prompt trigger prefix found"}
     result = workflow_engine.process_webhook_prompt(
         comment_text=payload.comment_text,
-        jira_issue_key=payload.jira_issue_key,
-        issue_summary=payload.summary,
-        project_key_hint=payload.project_key
+        jira_issue_key=formatted.jira_issue_key,
+        issue_summary=formatted.summary,
+        project_key_hint=formatted.project_key,
+        preparations=formatted.preparations
     )
     return result
+
+@app.post("/api/webhooks/jira")
+async def receive_jira_webhook(request: Request):
+    """Direct Jira Cloud webhook receiver endpoint with secret verification."""
+    raw_body = await request.body()
+    try:
+        raw_payload = json.loads(raw_body.decode("utf-8")) if raw_body else {}
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+
+    headers = dict(request.headers)
+    try:
+        formatted = webhook_watcher.receive_webhook(raw_payload, headers=headers, raw_body=raw_body)
+    except WebhookSecretVerificationError as exc:
+        logger.warning("Rejecting unauthorized webhook: %s", exc)
+        raise HTTPException(status_code=401, detail=str(exc))
+
+    if not formatted.is_ai_trigger:
+        return {"success": True, "message": "Ignored: No prompt tag", "payload": formatted.model_dump()}
+    result = webhook_watcher.dispatch_to_pipeline(formatted)
+    return {"success": True, "pipeline_result": result, "formatted": formatted.model_dump()}
+
+@app.get("/api/webhooks/test-jira-push")
+def test_jira_push_info():
+    """Returns configuration diagnostics and instructions for testing pushes from Jira."""
+    from backend.config import get_prompt_output_dir
+    return {
+        "status": "ready",
+        "description": "Hephaestus Manual Jira Push Test Route",
+        "prompt_save_directory": str(get_prompt_output_dir()),
+        "secret_configured": bool(JIRA_WEBHOOK_SECRET),
+        "instructions": (
+            "Configure Jira Cloud Webhook to send 'comment_created' or 'issue_updated' events "
+            "to this URL (or /api/webhooks/jira). A comment starting with '<|prompt|>' will trigger "
+            "the pipeline and write prompt.md (with preparations tagged) to the configured directory."
+        )
+    }
+
+@app.post("/api/webhooks/test-jira-push")
+async def manual_test_jira_push(request: Request):
+    """
+    Dedicated endpoint where users can manually test webhook pushes from their linked Jira site.
+    Performs full tag parsing, verifies whether comment begins with <|prompt|>,
+    dispatches through the pipeline, writes prompt.md with preparations tags,
+    and returns detailed test diagnostics.
+    """
+    raw_body = await request.body()
+    try:
+        raw_payload = json.loads(raw_body.decode("utf-8")) if raw_body else {}
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+
+    headers = dict(request.headers)
+    
+    # Optional secret verification for manual tests (allows testing with or without secret header)
+    secret_valid = False
+    has_secret_header = "x-hub-signature-256" in headers or "x-hub-signature" in headers or "x-webhook-secret" in headers
+    if has_secret_header:
+        try:
+            formatted = webhook_watcher.receive_webhook(raw_payload, headers=headers, raw_body=raw_body)
+            secret_valid = True
+        except WebhookSecretVerificationError as exc:
+            raise HTTPException(status_code=401, detail=f"Webhook secret verification failed: {exc}")
+    else:
+        # If headers omitted, parse payload directly for developer convenience
+        formatted = WebhookPayloadFormatter.format_payload(raw_payload)
+
+    # Verification 1: Check if pushed comment begins with <|prompt|>
+    if not formatted.is_ai_trigger:
+        return {
+            "test_status": "ignored",
+            "pushed_through_pipeline": False,
+            "reason": "Comment does not begin with <|prompt|> or <|prompt-new|>",
+            "received_comment": formatted.raw_comment,
+            "detected_tag": formatted.prompt_tag,
+            "jira_issue_key": formatted.jira_issue_key
+        }
+
+    # Verification 2 & 3: Push through pipeline (which calls PromptExtractor -> MDFileWriter)
+    pipeline_result = webhook_watcher.dispatch_to_pipeline(formatted)
+
+    from backend.config import get_prompt_output_dir
+    save_base_dir = get_prompt_output_dir()
+
+    return {
+        "test_status": "success",
+        "pushed_through_pipeline": True,
+        "jira_issue_key": formatted.jira_issue_key,
+        "prompt_tag": formatted.prompt_tag,
+        "has_preparations": formatted.has_preparations,
+        "preparations": formatted.preparations,
+        "prompt_instructions": formatted.prompt_instructions,
+        "prompt_save_base_directory": str(save_base_dir),
+        "pipeline_result": pipeline_result,
+        "secret_verified": secret_valid
+    }
+
 
 @app.post("/api/pipeline/merge")
 def merge_branch(req: MergeRequest):

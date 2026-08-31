@@ -1,0 +1,72 @@
+import logging
+from typing import Dict, Any, Union, Optional
+from backend.harness.base import BaseCodingHarness
+from backend.config import preferences
+
+logger = logging.getLogger("hephaestus.harness_registry")
+
+class HarnessRegistry:
+    """
+    Registry for AI coding harnesses, enabling plug-and-play architecture
+    for production harnesses, test stubs, mocks, and service virtualizations.
+    """
+
+    def __init__(self):
+        self._registry: Dict[str, Any] = {}
+        self._active_override: Optional[BaseCodingHarness] = None
+        self._init_defaults()
+
+    def _init_defaults(self):
+        # Lazy imports to prevent circular references
+        from backend.harness.antigravity_harness import AntigravityHeadlessHarness
+        from backend.harness.langgraph_harness import LangGraphHarness
+
+        self._registry["antigravity_daemon"] = AntigravityHeadlessHarness
+        self._registry["langgraph_agent"] = LangGraphHarness
+
+    def register_harness(self, name: str, harness_cls_or_instance: Union[type, BaseCodingHarness]):
+        """Register a new harness (class or instance) under a key."""
+        key = name.lower()
+        self._registry[key] = harness_cls_or_instance
+        logger.info("[HarnessRegistry] Registered harness: %s", key)
+
+    def set_active_harness(self, harness: Union[str, BaseCodingHarness]):
+        """
+        Sets the active harness. Can be an instantiated BaseCodingHarness
+        (e.g., a test stub or mock) or a string key matching a registered harness.
+        """
+        if isinstance(harness, BaseCodingHarness):
+            self._active_override = harness
+            logger.info("[HarnessRegistry] Active harness overridden with instance: %s", type(harness).__name__)
+        elif isinstance(harness, str):
+            key = harness.lower()
+            if key not in self._registry:
+                raise KeyError(f"Harness '{harness}' not found in registry. Registered: {list(self._registry.keys())}")
+            target = self._registry[key]
+            self._active_override = target() if isinstance(target, type) else target
+            logger.info("[HarnessRegistry] Active harness set to registered key: %s", key)
+        else:
+            raise TypeError("Expected BaseCodingHarness instance or string name")
+
+    def reset_active_harness(self):
+        """Resets any active override back to the configuration preference."""
+        self._active_override = None
+        logger.info("[HarnessRegistry] Reset active harness to preferences default.")
+
+    def get_active_harness(self) -> BaseCodingHarness:
+        """Returns the currently active coding harness."""
+        if self._active_override is not None:
+            return self._active_override
+
+        # Fallback to configured preference
+        active_key = preferences.harness.active.lower()
+        if active_key in self._registry:
+            target = self._registry[active_key]
+            return target() if isinstance(target, type) else target
+
+        # Default fallback
+        from backend.harness.antigravity_harness import AntigravityHeadlessHarness
+        return AntigravityHeadlessHarness()
+
+# Singleton instance
+harness_registry = HarnessRegistry()

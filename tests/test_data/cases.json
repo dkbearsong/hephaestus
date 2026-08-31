@@ -1,0 +1,1538 @@
+[
+  {
+    "id": "CASE-001",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on PAY-101",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1001",
+        "body": "<|prompt|> Implement unit tests and boundary validation for PAY service.",
+        "author": {
+          "displayName": "Dev PAY",
+          "name": "dev_pay"
+        }
+      },
+      "issue": {
+        "key": "PAY-101",
+        "fields": {
+          "summary": "Feature requirement for PAY",
+          "project": {
+            "key": "PAY"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "PAY-101",
+    "expected_project_key": "PAY",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for PAY service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-002",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on AUTH-102",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1002",
+        "body": "<|prompt|> Implement unit tests and boundary validation for AUTH service.",
+        "author": {
+          "displayName": "Dev AUTH",
+          "name": "dev_auth"
+        }
+      },
+      "issue": {
+        "key": "AUTH-102",
+        "fields": {
+          "summary": "Feature requirement for AUTH",
+          "project": {
+            "key": "AUTH"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "AUTH-102",
+    "expected_project_key": "AUTH",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for AUTH service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-003",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on BILL-103",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1003",
+        "body": "<|prompt|> Implement unit tests and boundary validation for BILL service.",
+        "author": {
+          "displayName": "Dev BILL",
+          "name": "dev_bill"
+        }
+      },
+      "issue": {
+        "key": "BILL-103",
+        "fields": {
+          "summary": "Feature requirement for BILL",
+          "project": {
+            "key": "BILL"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "BILL-103",
+    "expected_project_key": "BILL",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for BILL service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-004",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on CORE-104",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1004",
+        "body": "<|prompt|> Implement unit tests and boundary validation for CORE service.",
+        "author": {
+          "displayName": "Dev CORE",
+          "name": "dev_core"
+        }
+      },
+      "issue": {
+        "key": "CORE-104",
+        "fields": {
+          "summary": "Feature requirement for CORE",
+          "project": {
+            "key": "CORE"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "CORE-104",
+    "expected_project_key": "CORE",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for CORE service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-005",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on SEARCH-105",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1005",
+        "body": "<|prompt|> Implement unit tests and boundary validation for SEARCH service.",
+        "author": {
+          "displayName": "Dev SEARCH",
+          "name": "dev_search"
+        }
+      },
+      "issue": {
+        "key": "SEARCH-105",
+        "fields": {
+          "summary": "Feature requirement for SEARCH",
+          "project": {
+            "key": "SEARCH"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "SEARCH-105",
+    "expected_project_key": "SEARCH",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for SEARCH service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-006",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on DATA-106",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1006",
+        "body": "<|prompt|> Implement unit tests and boundary validation for DATA service.",
+        "author": {
+          "displayName": "Dev DATA",
+          "name": "dev_data"
+        }
+      },
+      "issue": {
+        "key": "DATA-106",
+        "fields": {
+          "summary": "Feature requirement for DATA",
+          "project": {
+            "key": "DATA"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DATA-106",
+    "expected_project_key": "DATA",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for DATA service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-007",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on API-107",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1007",
+        "body": "<|prompt|> Implement unit tests and boundary validation for API service.",
+        "author": {
+          "displayName": "Dev API",
+          "name": "dev_api"
+        }
+      },
+      "issue": {
+        "key": "API-107",
+        "fields": {
+          "summary": "Feature requirement for API",
+          "project": {
+            "key": "API"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "API-107",
+    "expected_project_key": "API",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for API service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-008",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on NOTIF-108",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1008",
+        "body": "<|prompt|> Implement unit tests and boundary validation for NOTIF service.",
+        "author": {
+          "displayName": "Dev NOTIF",
+          "name": "dev_notif"
+        }
+      },
+      "issue": {
+        "key": "NOTIF-108",
+        "fields": {
+          "summary": "Feature requirement for NOTIF",
+          "project": {
+            "key": "NOTIF"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "NOTIF-108",
+    "expected_project_key": "NOTIF",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for NOTIF service.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-009",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on OPS-109",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1009",
+        "body": "<|prompt|> Implement unit tests and boundary validation for OPS service.\n<|preparations|> Start docker daemon and initialize redis MCP tool.",
+        "author": {
+          "displayName": "Dev OPS",
+          "name": "dev_ops"
+        }
+      },
+      "issue": {
+        "key": "OPS-109",
+        "fields": {
+          "summary": "Feature requirement for OPS",
+          "project": {
+            "key": "OPS"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "OPS-109",
+    "expected_project_key": "OPS",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for OPS service.",
+    "expected_preparations": "Start docker daemon and initialize redis MCP tool."
+  },
+  {
+    "id": "CASE-010",
+    "category": "normal",
+    "description": "Standard Jira comment_created with <|prompt|> on UI-110",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1010",
+        "body": "<|prompt|> Implement unit tests and boundary validation for UI service.\n<|preparations|>\n- Install Node v20\n- Run npm install\n</|preparations|>",
+        "author": {
+          "displayName": "Dev UI",
+          "name": "dev_ui"
+        }
+      },
+      "issue": {
+        "key": "UI-110",
+        "fields": {
+          "summary": "Feature requirement for UI",
+          "project": {
+            "key": "UI"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "UI-110",
+    "expected_project_key": "UI",
+    "expected_stripped_comment": "Implement unit tests and boundary validation for UI service.",
+    "expected_preparations": "- Install Node v20\n- Run npm install"
+  },
+  {
+    "id": "CASE-011",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on NEWPAY-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1011",
+        "body": "<|prompt-new|> Scaffold new microservice repo for NEWPAY using FastAPI and SQLAlchemy.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "NEWPAY-1",
+        "fields": {
+          "summary": "Scaffold NEWPAY architecture",
+          "project": {
+            "key": "NEWPAY"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "NEWPAY-1",
+    "expected_project_key": "NEWPAY",
+    "expected_stripped_comment": "Scaffold new microservice repo for NEWPAY using FastAPI and SQLAlchemy.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-012",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on NEWAUTH-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1012",
+        "body": "<|prompt-new|> Scaffold new microservice repo for NEWAUTH using FastAPI and SQLAlchemy.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "NEWAUTH-1",
+        "fields": {
+          "summary": "Scaffold NEWAUTH architecture",
+          "project": {
+            "key": "NEWAUTH"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "NEWAUTH-1",
+    "expected_project_key": "NEWAUTH",
+    "expected_stripped_comment": "Scaffold new microservice repo for NEWAUTH using FastAPI and SQLAlchemy.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-013",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on GATEWAY-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1013",
+        "body": "<|prompt-new|> Scaffold new microservice repo for GATEWAY using FastAPI and SQLAlchemy.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "GATEWAY-1",
+        "fields": {
+          "summary": "Scaffold GATEWAY architecture",
+          "project": {
+            "key": "GATEWAY"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "GATEWAY-1",
+    "expected_project_key": "GATEWAY",
+    "expected_stripped_comment": "Scaffold new microservice repo for GATEWAY using FastAPI and SQLAlchemy.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-014",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on WORKER-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1014",
+        "body": "<|prompt-new|> Scaffold new microservice repo for WORKER using FastAPI and SQLAlchemy.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "WORKER-1",
+        "fields": {
+          "summary": "Scaffold WORKER architecture",
+          "project": {
+            "key": "WORKER"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "WORKER-1",
+    "expected_project_key": "WORKER",
+    "expected_stripped_comment": "Scaffold new microservice repo for WORKER using FastAPI and SQLAlchemy.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-015",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on ANALYTICS-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1015",
+        "body": "<|prompt-new|> Scaffold new microservice repo for ANALYTICS using FastAPI and SQLAlchemy.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "ANALYTICS-1",
+        "fields": {
+          "summary": "Scaffold ANALYTICS architecture",
+          "project": {
+            "key": "ANALYTICS"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "ANALYTICS-1",
+    "expected_project_key": "ANALYTICS",
+    "expected_stripped_comment": "Scaffold new microservice repo for ANALYTICS using FastAPI and SQLAlchemy.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-016",
+    "category": "normal",
+    "description": "Brand new project scaffold with <|prompt-new|> on INGEST-1",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "1016",
+        "body": "<|prompt-new|> Scaffold new microservice repo for INGEST using FastAPI and SQLAlchemy.\n<|preparations|> Mount postgres and rabbitmq MCP tools.",
+        "author": {
+          "displayName": "Architect Bob",
+          "name": "arch_bob"
+        }
+      },
+      "issue": {
+        "key": "INGEST-1",
+        "fields": {
+          "summary": "Scaffold INGEST architecture",
+          "project": {
+            "key": "INGEST"
+          },
+          "labels": [
+            "ai-code"
+          ]
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "INGEST-1",
+    "expected_project_key": "INGEST",
+    "expected_stripped_comment": "Scaffold new microservice repo for INGEST using FastAPI and SQLAlchemy.",
+    "expected_preparations": "Mount postgres and rabbitmq MCP tools."
+  },
+  {
+    "id": "CASE-017",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on PAY-217",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "PAY-217",
+        "fields": {
+          "summary": "Refactor module PAY",
+          "project": {
+            "key": "PAY"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-17",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2017",
+                "body": "<|prompt|> Optimize thread pool size in PAY client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "PAY-217",
+    "expected_project_key": "PAY",
+    "expected_stripped_comment": "Optimize thread pool size in PAY client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-018",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on AUTH-218",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "AUTH-218",
+        "fields": {
+          "summary": "Refactor module AUTH",
+          "project": {
+            "key": "AUTH"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-18",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2018",
+                "body": "<|prompt|> Optimize thread pool size in AUTH client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "AUTH-218",
+    "expected_project_key": "AUTH",
+    "expected_stripped_comment": "Optimize thread pool size in AUTH client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-019",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on CORE-219",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "CORE-219",
+        "fields": {
+          "summary": "Refactor module CORE",
+          "project": {
+            "key": "CORE"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-19",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2019",
+                "body": "<|prompt|> Optimize thread pool size in CORE client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "CORE-219",
+    "expected_project_key": "CORE",
+    "expected_stripped_comment": "Optimize thread pool size in CORE client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-020",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on SEARCH-220",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "SEARCH-220",
+        "fields": {
+          "summary": "Refactor module SEARCH",
+          "project": {
+            "key": "SEARCH"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-20",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2020",
+                "body": "<|prompt|> Optimize thread pool size in SEARCH client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "SEARCH-220",
+    "expected_project_key": "SEARCH",
+    "expected_stripped_comment": "Optimize thread pool size in SEARCH client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-021",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on DATA-221",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "DATA-221",
+        "fields": {
+          "summary": "Refactor module DATA",
+          "project": {
+            "key": "DATA"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-21",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2021",
+                "body": "<|prompt|> Optimize thread pool size in DATA client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DATA-221",
+    "expected_project_key": "DATA",
+    "expected_stripped_comment": "Optimize thread pool size in DATA client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-022",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on API-222",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "API-222",
+        "fields": {
+          "summary": "Refactor module API",
+          "project": {
+            "key": "API"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-22",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2022",
+                "body": "<|prompt|> Optimize thread pool size in API client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "API-222",
+    "expected_project_key": "API",
+    "expected_stripped_comment": "Optimize thread pool size in API client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-023",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on NOTIF-223",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "NOTIF-223",
+        "fields": {
+          "summary": "Refactor module NOTIF",
+          "project": {
+            "key": "NOTIF"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-23",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2023",
+                "body": "<|prompt|> Optimize thread pool size in NOTIF client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "NOTIF-223",
+    "expected_project_key": "NOTIF",
+    "expected_stripped_comment": "Optimize thread pool size in NOTIF client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-024",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested comment <|prompt|> on OPS-224",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "OPS-224",
+        "fields": {
+          "summary": "Refactor module OPS",
+          "project": {
+            "key": "OPS"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "old-24",
+                "body": "Initial discussion"
+              },
+              {
+                "id": "2024",
+                "body": "<|prompt|> Optimize thread pool size in OPS client."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "OPS-224",
+    "expected_project_key": "OPS",
+    "expected_stripped_comment": "Optimize thread pool size in OPS client.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-025",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested <|prompt-new|> on EXPORT-10",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "EXPORT-10",
+        "fields": {
+          "summary": "Bootstrap service EXPORT",
+          "project": {
+            "key": "EXPORT"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "2025",
+                "body": "<|prompt-new|> Initialize standalone service for EXPORT."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EXPORT-10",
+    "expected_project_key": "EXPORT",
+    "expected_stripped_comment": "Initialize standalone service for EXPORT.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-026",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested <|prompt-new|> on METRICS-10",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "METRICS-10",
+        "fields": {
+          "summary": "Bootstrap service METRICS",
+          "project": {
+            "key": "METRICS"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "2026",
+                "body": "<|prompt-new|> Initialize standalone service for METRICS."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "METRICS-10",
+    "expected_project_key": "METRICS",
+    "expected_stripped_comment": "Initialize standalone service for METRICS.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-027",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested <|prompt-new|> on CACHE-10",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "CACHE-10",
+        "fields": {
+          "summary": "Bootstrap service CACHE",
+          "project": {
+            "key": "CACHE"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "2027",
+                "body": "<|prompt-new|> Initialize standalone service for CACHE."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "CACHE-10",
+    "expected_project_key": "CACHE",
+    "expected_stripped_comment": "Initialize standalone service for CACHE.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-028",
+    "category": "normal",
+    "description": "Jira issue_updated event with nested <|prompt-new|> on CRON-10",
+    "payload_type": "jira_issue_update",
+    "payload": {
+      "webhookEvent": "jira:issue_updated",
+      "issue": {
+        "key": "CRON-10",
+        "fields": {
+          "summary": "Bootstrap service CRON",
+          "project": {
+            "key": "CRON"
+          },
+          "comment": {
+            "comments": [
+              {
+                "id": "2028",
+                "body": "<|prompt-new|> Initialize standalone service for CRON."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "CRON-10",
+    "expected_project_key": "CRON",
+    "expected_stripped_comment": "Initialize standalone service for CRON.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-029",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt|> on DIRPAY-1",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRPAY-1",
+      "project_key": "DIRPAY",
+      "summary": "Direct task for DIRPAY-1",
+      "comment_text": "<|prompt|> Direct JSON payload: implement webhook retry."
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRPAY-1",
+    "expected_project_key": "DIRPAY",
+    "expected_stripped_comment": "Direct JSON payload: implement webhook retry.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-030",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt|> on DIRAUTH-2",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRAUTH-2",
+      "project_key": "DIRAUTH",
+      "summary": "Direct task for DIRAUTH-2",
+      "comment_text": "<|prompt|> Direct JSON payload: add OAuth2 refresh token."
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRAUTH-2",
+    "expected_project_key": "DIRAUTH",
+    "expected_stripped_comment": "Direct JSON payload: add OAuth2 refresh token.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-031",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt|> on DIRBILL-3",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRBILL-3",
+      "project_key": "DIRBILL",
+      "summary": "Direct task for DIRBILL-3",
+      "comment_text": "<|prompt|> Direct JSON payload: calculate VAT tax."
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRBILL-3",
+    "expected_project_key": "DIRBILL",
+    "expected_stripped_comment": "Direct JSON payload: calculate VAT tax.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-032",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt-new|> on DIRSVC-4",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRSVC-4",
+      "project_key": "DIRSVC",
+      "summary": "Direct task for DIRSVC-4",
+      "comment_text": "<|prompt-new|> Scaffold new microservice for auditing."
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRSVC-4",
+    "expected_project_key": "DIRSVC",
+    "expected_stripped_comment": "Scaffold new microservice for auditing.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-033",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt-new|> on DIRMQ-5",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRMQ-5",
+      "project_key": "DIRMQ",
+      "summary": "Direct task for DIRMQ-5",
+      "comment_text": "<|prompt-new|> Scaffold RabbitMQ consumer worker."
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRMQ-5",
+    "expected_project_key": "DIRMQ",
+    "expected_stripped_comment": "Scaffold RabbitMQ consumer worker.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-034",
+    "category": "normal",
+    "description": "Direct JSON payload with <|prompt-new|> on DIRCLI-6",
+    "payload_type": "direct",
+    "payload": {
+      "jira_issue_key": "DIRCLI-6",
+      "project_key": "DIRCLI",
+      "summary": "Direct task for DIRCLI-6",
+      "comment_text": "<|prompt-new|> Create CLI administration tool with Typer."
+    },
+    "expected_tag": "prompt-new",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "DIRCLI-6",
+    "expected_project_key": "DIRCLI",
+    "expected_stripped_comment": "Create CLI administration tool with Typer.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-035",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on PAY-501",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3035",
+        "body": "PR is approved and ready for QA testing.",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "PAY-501",
+        "fields": {
+          "summary": "Discussion on PAY-501",
+          "project": {
+            "key": "PAY"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "PAY-501",
+    "expected_project_key": "PAY",
+    "expected_stripped_comment": "PR is approved and ready for QA testing.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-036",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on AUTH-502",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3036",
+        "body": "Can we check whether this affects JWT token expiration?",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "AUTH-502",
+        "fields": {
+          "summary": "Discussion on AUTH-502",
+          "project": {
+            "key": "AUTH"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "AUTH-502",
+    "expected_project_key": "AUTH",
+    "expected_stripped_comment": "Can we check whether this affects JWT token expiration?",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-037",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on CORE-503",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3037",
+        "body": "Updated staging deployment completed at 14:00 UTC.",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "CORE-503",
+        "fields": {
+          "summary": "Discussion on CORE-503",
+          "project": {
+            "key": "CORE"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "CORE-503",
+    "expected_project_key": "CORE",
+    "expected_stripped_comment": "Updated staging deployment completed at 14:00 UTC.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-038",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on SEARCH-504",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3038",
+        "body": "Please add documentation in the wiki for new search filter syntax.",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "SEARCH-504",
+        "fields": {
+          "summary": "Discussion on SEARCH-504",
+          "project": {
+            "key": "SEARCH"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "SEARCH-504",
+    "expected_project_key": "SEARCH",
+    "expected_stripped_comment": "Please add documentation in the wiki for new search filter syntax.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-039",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on DATA-505",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3039",
+        "body": "PostgreSQL database vacuum completed successfully with zero downtime.",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "DATA-505",
+        "fields": {
+          "summary": "Discussion on DATA-505",
+          "project": {
+            "key": "DATA"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "DATA-505",
+    "expected_project_key": "DATA",
+    "expected_stripped_comment": "PostgreSQL database vacuum completed successfully with zero downtime.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-040",
+    "category": "normal",
+    "description": "Normal comment without prompt tags on UI-506",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "3040",
+        "body": "Merged frontend styling fix for dark mode contrast.",
+        "author": {
+          "displayName": "Reviewer Alice",
+          "name": "alice"
+        }
+      },
+      "issue": {
+        "key": "UI-506",
+        "fields": {
+          "summary": "Discussion on UI-506",
+          "project": {
+            "key": "UI"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "UI-506",
+    "expected_project_key": "UI",
+    "expected_stripped_comment": "Merged frontend styling fix for dark mode contrast.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-041",
+    "category": "edge_under",
+    "description": "Leading and trailing whitespace, tabs, and newlines surrounding <|prompt|>",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "4001",
+        "body": "\n\n\t  <|prompt|>  Add connection pool keep-alive ping.  \n\t"
+      },
+      "issue": {
+        "key": "EDGE-1",
+        "fields": {
+          "project": {
+            "key": "EDGE"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EDGE-1",
+    "expected_project_key": "EDGE",
+    "expected_stripped_comment": "Add connection pool keep-alive ping.  \n\t",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-042",
+    "category": "edge_under",
+    "description": "Prompt tag directly followed by text without intervening space",
+    "payload_type": "jira_comment",
+    "comment_text": "<|prompt|>fix the memory leak in buffer_manager.py",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "4002",
+        "body": "<|prompt|>fix the memory leak in buffer_manager.py"
+      },
+      "issue": {
+        "key": "EDGE-2",
+        "fields": {
+          "project": {
+            "key": "EDGE"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EDGE-2",
+    "expected_project_key": "EDGE",
+    "expected_stripped_comment": "fix the memory leak in buffer_manager.py",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-043",
+    "category": "edge_under",
+    "description": "Comment containing secondary prompt tags inside the prompt instructions body",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "4003",
+        "body": "<|prompt|> Update documentation and explain how <|prompt|> and <|prompt-new|> work."
+      },
+      "issue": {
+        "key": "EDGE-3",
+        "fields": {
+          "project": {
+            "key": "EDGE"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EDGE-3",
+    "expected_project_key": "EDGE",
+    "expected_stripped_comment": "Update documentation and explain how <|prompt|> and <|prompt-new|> work.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-044",
+    "category": "edge_under",
+    "description": "Prompt tag with empty comment body after tag",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "4004",
+        "body": "<|prompt|>   \n\t  "
+      },
+      "issue": {
+        "key": "EDGE-4",
+        "fields": {
+          "project": {
+            "key": "EDGE"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EDGE-4",
+    "expected_project_key": "EDGE",
+    "expected_stripped_comment": "",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-045",
+    "category": "edge_under",
+    "description": "Unicode characters, emojis, and Windows CRLF line breaks",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "4005",
+        "body": "<|prompt|> \ud83d\ude80 Fix unicode parsing with \u00fc, \u00f1, and \u65e5\u672c\u8a9e\r\nLine 2 with CRLF\r\n"
+      },
+      "issue": {
+        "key": "EDGE-5",
+        "fields": {
+          "project": {
+            "key": "EDGE"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "EDGE-5",
+    "expected_project_key": "EDGE",
+    "expected_stripped_comment": "\ud83d\ude80 Fix unicode parsing with \u00fc, \u00f1, and \u65e5\u672c\u8a9e\r\nLine 2 with CRLF\r\n",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-046",
+    "category": "edge_over",
+    "description": "Oversized payload (massive prompt body with >50KB stack trace dump)",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "5001",
+        "body": "<|prompt|> Analyze this oversized crash dump:\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\n"
+      },
+      "issue": {
+        "key": "OVER-1",
+        "fields": {
+          "project": {
+            "key": "OVER"
+          }
+        }
+      }
+    },
+    "expected_tag": "prompt",
+    "expected_is_ai_trigger": true,
+    "expected_issue_key": "OVER-1",
+    "expected_project_key": "OVER",
+    "expected_stripped_comment": "Analyze this oversized crash dump:\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\nStack trace line: at com.hephaestus.core.Service.run(Service.java:120)\n",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-047",
+    "category": "edge_over",
+    "description": "Prompt tag embedded deep within conversational sentence (not at prefix)",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "5002",
+        "body": "Please be careful not to include <|prompt|> in client-facing Jira tickets."
+      },
+      "issue": {
+        "key": "OVER-2",
+        "fields": {
+          "project": {
+            "key": "OVER"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "OVER-2",
+    "expected_project_key": "OVER",
+    "expected_stripped_comment": "Please be careful not to include <|prompt|> in client-facing Jira tickets.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-048",
+    "category": "edge_over",
+    "description": "Near-miss or misspelled tag prefix (e.g. <|prompt-old|> or <prompt>)",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "5003",
+        "body": "<|prompt-old|> Update legacy payment flow without new engine."
+      },
+      "issue": {
+        "key": "OVER-3",
+        "fields": {
+          "project": {
+            "key": "OVER"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "OVER-3",
+    "expected_project_key": "OVER",
+    "expected_stripped_comment": "<|prompt-old|> Update legacy payment flow without new engine.",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-049",
+    "category": "edge_over",
+    "description": "Malformed/incomplete payload structure missing issue and comment objects",
+    "payload_type": "raw_incomplete",
+    "payload": {
+      "webhookEvent": "jira:system_heartbeat",
+      "timestamp": 1724928000
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "DEFAULT-UNKNOWN",
+    "expected_project_key": "DEFAULT",
+    "expected_stripped_comment": "",
+    "expected_preparations": null
+  },
+  {
+    "id": "CASE-050",
+    "category": "edge_over",
+    "description": "Bracket-wrapped tag prefix ([<|prompt|>]) - should not trigger AI",
+    "payload_type": "jira_comment",
+    "payload": {
+      "webhookEvent": "comment_created",
+      "comment": {
+        "id": "5005",
+        "body": "[<|prompt|>] Refactor database migrations."
+      },
+      "issue": {
+        "key": "OVER-5",
+        "fields": {
+          "project": {
+            "key": "OVER"
+          }
+        }
+      }
+    },
+    "expected_tag": null,
+    "expected_is_ai_trigger": false,
+    "expected_issue_key": "OVER-5",
+    "expected_project_key": "OVER",
+    "expected_stripped_comment": "[<|prompt|>] Refactor database migrations.",
+    "expected_preparations": null
+  }
+]

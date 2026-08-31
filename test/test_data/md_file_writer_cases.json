@@ -1,0 +1,82 @@
+[
+  {
+    "id": "MD-CASE-001",
+    "description": "Standard prompt beginning with <|prompt|> tag pushes through",
+    "comment": "<|prompt|> Implement order processing retry queue with exponential backoff.",
+    "jira_issue_key": "PAY-201",
+    "expected_pushed": true,
+    "expected_has_prep": false,
+    "expected_prep": null,
+    "expected_tag": "prompt"
+  },
+  {
+    "id": "MD-CASE-002",
+    "description": "Standard prompt beginning with <|prompt-new|> tag pushes through",
+    "comment": "<|prompt-new|> Scaffold customer notifications microservice in FastAPI.",
+    "jira_issue_key": "NOTIF-101",
+    "expected_pushed": true,
+    "expected_has_prep": false,
+    "expected_prep": null,
+    "expected_tag": "prompt-new"
+  },
+  {
+    "id": "MD-CASE-003",
+    "description": "Comment without <|prompt|> tag is ignored and does NOT push through",
+    "comment": "Hey team, this bug is resolved in release 1.4.0. Please verify.",
+    "jira_issue_key": "BUG-302",
+    "expected_pushed": false,
+    "expected_has_prep": false,
+    "expected_prep": null,
+    "expected_tag": null
+  },
+  {
+    "id": "MD-CASE-004",
+    "description": "Comment with <|prompt|> embedded in middle is ignored and does NOT push through",
+    "comment": "Here is an example: <|prompt|> Do something. But this comment does not start with it.",
+    "jira_issue_key": "DOCS-104",
+    "expected_pushed": false,
+    "expected_has_prep": false,
+    "expected_prep": null,
+    "expected_tag": null
+  },
+  {
+    "id": "MD-CASE-005",
+    "description": "Prompt with inline <|preparations|> written to md file with tagged section",
+    "comment": "<|prompt|> Optimize database queries for user reports.\\n<|preparations|> Run EXPLAIN ANALYZE on slow query log and ensure pg_stat_statements is enabled.",
+    "jira_issue_key": "DB-401",
+    "expected_pushed": true,
+    "expected_has_prep": true,
+    "expected_prep": "Run EXPLAIN ANALYZE on slow query log and ensure pg_stat_statements is enabled.",
+    "expected_tag": "prompt"
+  },
+  {
+    "id": "MD-CASE-006",
+    "description": "Prompt with multiline <|preparations|> block written to md file with tagged section",
+    "comment": "<|prompt|> Build automated regression suite.\\n<|preparations|>\\n- Step 1: Spin up redis container on port 6379\\n- Step 2: Grant AI access to postgres_inspector MCP tool\\n- Step 3: Run seed.py\\n</|preparations|>",
+    "jira_issue_key": "TEST-501",
+    "expected_pushed": true,
+    "expected_has_prep": true,
+    "expected_prep": "- Step 1: Spin up redis container on port 6379\\n- Step 2: Grant AI access to postgres_inspector MCP tool\\n- Step 3: Run seed.py",
+    "expected_tag": "prompt"
+  },
+  {
+    "id": "MD-CASE-007",
+    "description": "Custom save location verification via .env PROMPT_OUTPUT_DIR",
+    "comment": "<|prompt|> Verify custom prompt directory saving.\\n<|preparations|> Verify staging directory isolation.",
+    "jira_issue_key": "ENV-601",
+    "expected_pushed": true,
+    "expected_has_prep": true,
+    "expected_prep": "Verify staging directory isolation.",
+    "expected_tag": "prompt"
+  },
+  {
+    "id": "MD-CASE-008",
+    "description": "Manual Jira push test route request payload",
+    "comment": "<|prompt|> Manual test push verification from linked Jira site.\\n<|preparations|> Setup sandbox verification environment.",
+    "jira_issue_key": "MANUAL-701",
+    "expected_pushed": true,
+    "expected_has_prep": true,
+    "expected_prep": "Setup sandbox verification environment.",
+    "expected_tag": "prompt"
+  }
+]

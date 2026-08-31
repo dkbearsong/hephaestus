@@ -84,4 +84,31 @@ router.post('/jira', async (req, res) => {
   }
 });
 
+/**
+ * Manual Jira Push Test Route (GET diagnostics, POST test push)
+ * Forwards directly to Python core service /api/webhooks/test-jira-push
+ */
+router.get('/test-jira-push', async (req, res) => {
+  try {
+    const response = await axios.get(`${PYTHON_SERVICE}/api/webhooks/test-jira-push`);
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/test-jira-push', async (req, res) => {
+  try {
+    const response = await axios.post(`${PYTHON_SERVICE}/api/webhooks/test-jira-push`, req.body, {
+      headers: req.headers
+    });
+    res.json(response.data);
+  } catch (err) {
+    const status = err.response ? err.response.status : 500;
+    const data = err.response ? err.response.data : { error: err.message };
+    res.status(status).json(data);
+  }
+});
+
 export default router;
+
