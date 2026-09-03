@@ -6,6 +6,7 @@ from test_harness.ai.stub import AIStubHarness
 from test_harness.ai.mock import AIMockHarness
 from test_harness.ai.virtualizer import AIServiceVirtualizer
 from test_harness.preparations.tester import PreparationsTester
+from test_harness.coding_agents.tester import CodingAgentsTester
 from test_harness.webhook.watcher_client import WebhookWatcherClient
 from test_harness.webhook.live_template import LiveWebhookTemplate
 from test_harness.webhook.validator import WebhookPayloadValidator
@@ -18,7 +19,8 @@ class TestHarness(BaseTestComponent):
     """
     Central Test Harness Manager orchestrating component-based testing
     for Hephaestus, providing stubs, mocks, and service virtualizations for AI,
-    preparations testing, webhook testing clients, validators, and execution reporters.
+    preparations testing, coding agent testing (Google Jules, Grok Build, OpenAI Codex,
+    Docker Sandbox, Devin, OpenHands), webhook testing clients, validators, and execution reporters.
     """
     __test__ = False
 
@@ -29,6 +31,7 @@ class TestHarness(BaseTestComponent):
         self.ai_mock = AIMockHarness()
         self.ai_virtualizer = AIServiceVirtualizer()
         self.preparations_tester = PreparationsTester()
+        self.coding_agents_tester = CodingAgentsTester()
         self.webhook_client = WebhookWatcherClient()
         self.live_template = LiveWebhookTemplate()
         self.payload_validator = WebhookPayloadValidator()
@@ -115,6 +118,7 @@ class TestHarness(BaseTestComponent):
                 "ai_mock": self.ai_mock.get_status(),
                 "ai_virtualizer": self.ai_virtualizer.get_status(),
                 "preparations_tester": self.preparations_tester.get_status(),
+                "coding_agents_tester": "ready",
                 "webhook_client": self.webhook_client.get_status(),
                 "live_template": self.live_template.get_status(),
                 "payload_validator": self.payload_validator.get_status(),

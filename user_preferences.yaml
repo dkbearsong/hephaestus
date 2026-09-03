@@ -1,6 +1,6 @@
 # Hephaestus User Preferences & System Configuration
 
-# Preparations Step Configuration (runs after preparations.md and before Docker container creation)
+# Preparations Step Configuration (runs after preparations.md and before Coding Agent Orchestrator)
 preparations_step:
   enabled: true
   # Preferred provider: 'chatgpt' | 'gemini' | 'claude' | 'grok' | 'openrouter' | 'groq' | 'huggingface' | 'nvidia' | 'lm_studio' | 'ollama'
@@ -20,22 +20,84 @@ preparations_step:
     huggingface: "https://api-inference.huggingface.co/v1"
     nvidia: "https://integrate.api.nvidia.com/v1"
 
-# Coding Agent Harness Configuration
+# Coding Agent Harness & Orchestrator Configuration
 harness:
-  # Active harness adapter: 'antigravity_daemon' | 'langgraph_agent'
-  active: "antigravity_daemon"
+  # Active coding agent platform:
+  # 'google_jules' | 'grok_build' | 'openai_codex_cloud' | 'docker_sandbox_claude_codex' | 'devin_ai' | 'openhands_canvas' | 'cursor_agent' | 'langgraph_agent'
+  active: "google_jules"
   
-  antigravity_daemon:
-    headless_mode: true
-    remote_control: true
-    socket_path: "/var/run/antigravity.sock"
-    default_model: "gemini-3.7-flash"
-    timeout_seconds: 600
-    # Autonomy boundaries
-    auto_execute_commands: true
+  google_jules:
+    model: "gemini-3.7-flash"
+    container_type: "google_cloud_workspace"
+    auto_execute_tests: true
     require_approval_for_external_network: true
     allowed_domains:
       - "github.com"
+      - "google.com"
+      - "pypi.org"
+
+  grok_build:
+    model: "grok-beta"
+    container_type: "grok_build_sandbox"
+    compiler_mode: "ast_parallel"
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "x.ai"
+      - "pypi.org"
+
+  openai_codex_cloud:
+    model: "gpt-4o"
+    container_type: "openai_cloud_sandbox"
+    sandbox_timeout_seconds: 600
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "openai.com"
+      - "pypi.org"
+
+  docker_sandbox_claude_codex:
+    engine: "claude_code" # 'claude_code' | 'openai_codex'
+    container_type: "docker_sandbox_runner"
+    base_image: "python:3.12-slim"
+    timeout_seconds: 600
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "anthropic.com"
+      - "openai.com"
+      - "pypi.org"
+      - "registry.npmjs.org"
+
+  devin_ai:
+    container_type: "devin_cloud_session"
+    auto_install_dependencies: true
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "cognition.ai"
+      - "pypi.org"
+
+  openhands_canvas:
+    runtime_url: "http://localhost:3000"
+    container_type: "openhands_agent_canvas"
+    canvas_visualizer: true
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "all-hands.dev"
+      - "pypi.org"
+      - "registry.npmjs.org"
+
+  cursor_agent:
+    mode: "cursor_cloud" # 'cursor_cloud' | 'cursor_dev_container'
+    container_type: "cursor_cloud_workspace"
+    devcontainer_image: "mcr.microsoft.com/devcontainers/python:3.12"
+    require_approval_for_external_network: true
+    allowed_domains:
+      - "github.com"
+      - "cursor.com"
+      - "cursor.sh"
       - "pypi.org"
       - "registry.npmjs.org"
 
@@ -54,19 +116,7 @@ jira:
   auto_remove_trigger_label: true
   transition_on_merge: "Done" # Jira workflow status to transition to on branch merge
 
-# Docker Sandbox & Isolation Settings
-docker:
-  default_base_image: "python:3.12-slim"
-  container_prefix: "hephaestus_"
-  checkpoint_image_prefix: "hephaestus-checkpoint:"
-  workspace_dir_inside_container: "/workspace"
-  auto_commit_on_pause: true
-  auto_prune_on_merge: true
-  memory_limit: "4g"
-  cpu_limit: 2.0
-
 # Model Context Protocol (MCP) Tools Registry
-# Place tools inside the `mcp_tools/` folder. Add tool identifiers here to activate them.
 mcp_tools:
   tools_directory: "mcp_tools"
   enabled:

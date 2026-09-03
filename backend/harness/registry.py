@@ -1,3 +1,9 @@
+"""
+Registry for Coding Agent Harnesses and Adapters
+Supports all 7 containerized coding agent platforms, LangGraph state machine,
+and test harnesses (stubs, mocks, virtualizers).
+"""
+
 import logging
 from typing import Dict, Any, Union, Optional
 from backend.harness.base import BaseCodingHarness
@@ -8,7 +14,7 @@ logger = logging.getLogger("hephaestus.harness_registry")
 class HarnessRegistry:
     """
     Registry for AI coding harnesses, enabling plug-and-play architecture
-    for production harnesses, test stubs, mocks, and service virtualizations.
+    for production coding agent platforms, LangGraph agent, and test harnesses.
     """
 
     def __init__(self):
@@ -17,12 +23,44 @@ class HarnessRegistry:
         self._init_defaults()
 
     def _init_defaults(self):
-        # Lazy imports to prevent circular references
-        from backend.harness.antigravity_harness import AntigravityHeadlessHarness
+        # Import coding agent orchestrators
+        from backend.coding_agents.google_jules import GoogleJulesOrchestrator
+        from backend.coding_agents.grok_build import GrokBuildOrchestrator
+        from backend.coding_agents.openai_codex_cloud import OpenAICodexCloudOrchestrator
+        from backend.coding_agents.docker_sandbox_claude_codex import DockerSandboxClaudeCodexOrchestrator
+        from backend.coding_agents.devin_ai import DevinAIOrchestrator
+        from backend.coding_agents.openhands_canvas import OpenHandsAgentCanvasOrchestrator
+        from backend.coding_agents.cursor_agent import CursorAgentOrchestrator
         from backend.harness.langgraph_harness import LangGraphHarness
 
-        self._registry["antigravity_daemon"] = AntigravityHeadlessHarness
+        # Register coding agent platforms
+        self._registry["google_jules"] = GoogleJulesOrchestrator
+        self._registry["grok_build"] = GrokBuildOrchestrator
+        self._registry["openai_codex_cloud"] = OpenAICodexCloudOrchestrator
+        self._registry["docker_sandbox_claude_codex"] = DockerSandboxClaudeCodexOrchestrator
+        self._registry["devin_ai"] = DevinAIOrchestrator
+        self._registry["openhands_canvas"] = OpenHandsAgentCanvasOrchestrator
+        self._registry["cursor_agent"] = CursorAgentOrchestrator
+
+        # Register LangGraph agent
         self._registry["langgraph_agent"] = LangGraphHarness
+
+        # Friendly aliases & legacy compatibility
+        self._registry["jules"] = GoogleJulesOrchestrator
+        self._registry["grok"] = GrokBuildOrchestrator
+        self._registry["codex"] = OpenAICodexCloudOrchestrator
+        self._registry["openai_codex"] = OpenAICodexCloudOrchestrator
+        self._registry["docker_sandbox"] = DockerSandboxClaudeCodexOrchestrator
+        self._registry["docker_claude_codex"] = DockerSandboxClaudeCodexOrchestrator
+        self._registry["claude_code"] = DockerSandboxClaudeCodexOrchestrator
+        self._registry["devin"] = DevinAIOrchestrator
+        self._registry["openhands"] = OpenHandsAgentCanvasOrchestrator
+        self._registry["openhands_agent_canvas"] = OpenHandsAgentCanvasOrchestrator
+        self._registry["cursor"] = CursorAgentOrchestrator
+        self._registry["cursor_cloud"] = CursorAgentOrchestrator
+        self._registry["cursor_dev_container"] = CursorAgentOrchestrator
+        # Legacy fallback
+        self._registry["antigravity_daemon"] = GoogleJulesOrchestrator
 
     def register_harness(self, name: str, harness_cls_or_instance: Union[type, BaseCodingHarness]):
         """Register a new harness (class or instance) under a key."""
@@ -64,9 +102,9 @@ class HarnessRegistry:
             target = self._registry[active_key]
             return target() if isinstance(target, type) else target
 
-        # Default fallback
-        from backend.harness.antigravity_harness import AntigravityHeadlessHarness
-        return AntigravityHeadlessHarness()
+        # Default fallback to Google Jules
+        from backend.coding_agents.google_jules import GoogleJulesOrchestrator
+        return GoogleJulesOrchestrator()
 
 # Singleton instance
 harness_registry = HarnessRegistry()

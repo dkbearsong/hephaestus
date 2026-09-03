@@ -4,10 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from backend.workflows.task_graph import workflow_engine
+from backend.coding_agents.orchestrator import coding_agent_orchestrator
 from backend.database.search import search_full_text
 from backend.database.connection import get_db, SessionLocal
 from backend.database.models import Project, Ticket, WorkLog, ChatMessage, AgentNotification
 from backend.jira_service.client import jira_service
+from backend.config import JIRA_WEBHOOK_SECRET, get_prompt_output_dir
 from backend.watcher.webhook_watcher import (
     webhook_watcher,
     FormattedWebhookPayload,
@@ -23,7 +25,7 @@ logger = logging.getLogger("hephaestus.api")
 # Connect webhook watcher to workflow engine
 webhook_watcher.pipeline_engine = workflow_engine
 
-app = FastAPI(title="Hephaestus Coding Agent Harness Backend", version="1.0.0")
+app = FastAPI(title="Hephaestus Coding Agent Harness Backend", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,6 +40,7 @@ class WebhookPayload(BaseModel):
     jira_issue_key: str
     summary: Optional[str] = ""
     project_key: Optional[str] = ""
+    target_agent: Optional[str] = None
 
 class MergeRequest(BaseModel):
     ticket_id: int
@@ -49,7 +52,20 @@ class ChatRequest(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "hephaestus_python_core"}
+    return {
+        "status": "ok",
+        "service": "hephaestus_python_core",
+        "version": "2.0.0",
+        "active_coding_agent": coding_agent_orchestrator.get_agent().display_name
+    }
+
+@app.get("/api/coding-agents")
+def list_coding_agents():
+    """Returns the catalog of 6 supported containerized coding agent orchestrators."""
+    return {
+        "active_agent": coding_agent_orchestrator.get_agent().agent_id,
+        "agents": coding_agent_orchestrator.list_supported_agents()
+    }
 
 @app.post("/api/pipeline/webhook")
 async def process_webhook(payload: WebhookPayload, request: Request):
@@ -66,7 +82,8 @@ async def process_webhook(payload: WebhookPayload, request: Request):
         jira_issue_key=formatted.jira_issue_key,
         issue_summary=formatted.summary,
         project_key_hint=formatted.project_key,
-        preparations=formatted.preparations
+        preparations=formatted.preparations,
+        target_agent=payload.target_agent
     )
     return result
 
@@ -94,16 +111,16 @@ async def receive_jira_webhook(request: Request):
 @app.get("/api/webhooks/test-jira-push")
 def test_jira_push_info():
     """Returns configuration diagnostics and instructions for testing pushes from Jira."""
-    from backend.config import get_prompt_output_dir
     return {
         "status": "ready",
         "description": "Hephaestus Manual Jira Push Test Route",
         "prompt_save_directory": str(get_prompt_output_dir()),
         "secret_configured": bool(JIRA_WEBHOOK_SECRET),
+        "supported_coding_agents": [a["agent_id"] for a in coding_agent_orchestrator.list_supported_agents()],
         "instructions": (
-            "Configure Jira Cloud Webhook to send 'comment_created' or 'issue_updated' events "
-            "to this URL (or /api/webhooks/jira). A comment starting with '<|prompt|>' will trigger "
-            "the pipeline and write prompt.md (with preparations tagged) to the configured directory."
+            "Configure Jira Cloud Webhook to send 'comment_created' or 'issue_updated' events. "
+            "A comment starting with '<|prompt|>' will trigger Preparations (LangGraph) -> "
+            "Coding Agent Orchestrator (Google Jules, Grok Build, OpenAI Codex, Docker Sandbox Claude/Codex, Devin, OpenHands)."
         )
     }
 
@@ -112,7 +129,7 @@ async def manual_test_jira_push(request: Request):
     """
     Dedicated endpoint where users can manually test webhook pushes from their linked Jira site.
     Performs full tag parsing, verifies whether comment begins with <|prompt|>,
-    dispatches through the pipeline, writes prompt.md with preparations tags,
+    dispatches through Preparations LangGraph and Coding Agent Orchestrator,
     and returns detailed test diagnostics.
     """
     raw_body = await request.body()
@@ -122,8 +139,9 @@ async def manual_test_jira_push(request: Request):
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
     headers = dict(request.headers)
+    target_agent = raw_payload.get("target_agent") or request.query_params.get("agent")
     
-    # Optional secret verification for manual tests (allows testing with or without secret header)
+    # Optional secret verification for manual tests
     secret_valid = False
     has_secret_header = "x-hub-signature-256" in headers or "x-hub-signature" in headers or "x-webhook-secret" in headers
     if has_secret_header:
@@ -133,7 +151,6 @@ async def manual_test_jira_push(request: Request):
         except WebhookSecretVerificationError as exc:
             raise HTTPException(status_code=401, detail=f"Webhook secret verification failed: {exc}")
     else:
-        # If headers omitted, parse payload directly for developer convenience
         formatted = WebhookPayloadFormatter.format_payload(raw_payload)
 
     # Verification 1: Check if pushed comment begins with <|prompt|>
@@ -147,10 +164,19 @@ async def manual_test_jira_push(request: Request):
             "jira_issue_key": formatted.jira_issue_key
         }
 
-    # Verification 2 & 3: Push through pipeline (which calls PromptExtractor -> MDFileWriter)
-    pipeline_result = webhook_watcher.dispatch_to_pipeline(formatted)
+    # Verification 2: Run pipeline
+    if target_agent:
+        pipeline_result = workflow_engine.process_webhook_prompt(
+            comment_text=formatted.in_memory_comment,
+            jira_issue_key=formatted.jira_issue_key,
+            issue_summary=formatted.summary,
+            project_key_hint=formatted.project_key,
+            preparations=formatted.preparations,
+            target_agent=target_agent
+        )
+    else:
+        pipeline_result = webhook_watcher.dispatch_to_pipeline(formatted)
 
-    from backend.config import get_prompt_output_dir
     save_base_dir = get_prompt_output_dir()
 
     return {
@@ -162,10 +188,10 @@ async def manual_test_jira_push(request: Request):
         "preparations": formatted.preparations,
         "prompt_instructions": formatted.prompt_instructions,
         "prompt_save_base_directory": str(save_base_dir),
+        "target_agent": target_agent or "default_from_preferences",
         "pipeline_result": pipeline_result,
         "secret_verified": secret_valid
     }
-
 
 @app.post("/api/pipeline/merge")
 def merge_branch(req: MergeRequest):

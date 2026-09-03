@@ -16,9 +16,9 @@ from backend.preprocessor.prompt_extractor import prompt_extractor
 from backend.preprocessor.file_gatherer import file_gatherer
 from backend.preprocessor.preparations_graph import preparations_runner
 from backend.harness.mcp_loader import mcp_loader
-from backend.docker_manager.container_service import docker_manager
+from backend.coding_agents.orchestrator import coding_agent_orchestrator
 from backend.workflows.task_graph import workflow_engine
-from test_harness import test_harness_manager
+from test_harness import test_harness_manager, coding_agents_tester
 
 def run_tests():
     print("==========================================================")
@@ -117,7 +117,7 @@ def run_tests():
         assert paused_notif is not None, "Expected pending needs_input notification"
         print(f"   Created Red Agent Notification: '{paused_notif.title}'")
 
-        # 6. Workflow Execution: Autonomous In-Container Completion (YELLOW COMPLETED ICON)
+        # 6. Workflow Execution: In-Container Completion (YELLOW COMPLETED ICON)
         prompt_internal = "<|prompt|> Implement internal cache invalidation routine on user logout.\n<|preparations|> Verify current time and load postgres inspector."
         res_complete = workflow_engine.process_webhook_prompt(
             comment_text=prompt_internal,
@@ -127,15 +127,21 @@ def run_tests():
         )
         assert res_complete["status"] == "review_ready", "Expected harness to complete task inside sandbox"
         assert res_complete.get("preparations_result") is not None, "Expected preparations execution in workflow"
-        print("✅ [Coding Harness: In-Sandbox Completion] Task completed autonomously with Preparations Step, Checkpointed container and generated Review Log.")
+        print("✅ [Coding Harness: In-Sandbox Completion] Task completed autonomously with Preparations Step and generated Review Log.")
 
         # 7. Merge to Main and Teardown
         merge_ticket_id = res_complete["ticket_id"]
         merge_res = workflow_engine.merge_and_cleanup_branch(merge_ticket_id)
         assert merge_res["status"] == "merged", "Merge failed"
-        print("✅ [Branch Merge & Teardown] Branch merged to main, container & checkpoint image pruned, Jira updated.")
+        print("✅ [Branch Merge & Teardown] Branch merged to main, container sandbox cleaned up, Jira updated.")
 
-        print("\n🎉 ALL 7 TEST SUITES PASSED WITH 100% SUCCESS!")
+        # 8. Multi-Agent Coding Orchestrator Verification (Google Jules, Grok Build, OpenAI Codex, Docker Sandbox, Devin, OpenHands)
+        print("\n🧪 [Coding Agent Orchestrators] Running verification across all 6 containerized coding platforms...")
+        agents_summary = coding_agents_tester.test_all_agents(verbose=False)
+        assert agents_summary["all_passed"], "One or more coding agent platform tests failed"
+        print(f"✅ [Coding Agent Orchestrators] All {agents_summary['total_tested']} containerized agent platforms verified with 100% success!")
+
+        print("\n🎉 ALL 8 TEST SUITES PASSED WITH 100% SUCCESS!")
     finally:
         session.close()
 
