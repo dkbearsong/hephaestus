@@ -1,0 +1,18 @@
+{
+  "name": "workspace-orchestrator",
+  "version": "1.0.0",
+  "description": "Workspace Orchestrator Service for Hephaestus",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/orchestrator.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}
