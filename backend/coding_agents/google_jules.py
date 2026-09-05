@@ -71,7 +71,8 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
         self,
         prompt: str,
         container_env: ContainerEnvironment,
-        project_config: Dict[str, Any]
+        project_config: Dict[str, Any],
+        preparations_result: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict[str, Any]]:
         """
         Dispatches session creation to the official Google Jules REST API
@@ -92,6 +93,19 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
         source_id = f"sources/github/{owner}/{repo_name}"
         branch = container_env.branch_name or "main"
 
+        # Compose rich prompt for Jules including prep directives if present
+        jules_prompt = prompt
+        prep_notes = []
+        if preparations_result:
+            prov = preparations_result.get("provider", "LLM")
+            notes = preparations_result.get("response") or preparations_result.get("summary")
+            if notes:
+                prep_notes.append(f"### Preparation Directives ({prov}):\n{notes}")
+        if container_env.staged_files:
+            prep_notes.append("### Referenced Staged Files:\n" + "\n".join([f"- {f.get('filename') or f.get('path')}" for f in container_env.staged_files]))
+        if prep_notes:
+            jules_prompt = f"{prompt}\n\n" + "\n\n".join(prep_notes)
+
         url = "https://jules.googleapis.com/v1alpha/sessions"
         headers = {
             "Content-Type": "application/json",
@@ -99,7 +113,7 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
             "User-Agent": "Hephaestus-Jules-Connector/1.0"
         }
         payload = {
-            "prompt": prompt,
+            "prompt": jules_prompt,
             "sourceContext": {
                 "source": source_id,
                 "githubRepoContext": {
@@ -188,7 +202,13 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
             )
 
         # Attempt dispatch to official Google Jules REST API (https://developers.google.com/jules/api)
-        jules_session = self._dispatch_jules_api(prompt, container_env, project_config)
+        jules_session = self._dispatch_jules_api(
+            prompt,
+            container_env,
+            project_config,
+            preparations_result=preparations_result
+        )
+        session_name = None
         if jules_session:
             session_name = jules_session.get("name") or jules_session.get("id", "active_session")
             logs.append(f"[Google Jules API] Connected to live Jules API. Created remote session: {session_name}")
@@ -232,5 +252,6 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
                 "Confirm Jira acceptance criteria are met"
             ],
             git_diff=diff,
-            full_log="\n".join(logs)
+            full_log="\n".join(logs),
+            session_id=session_name
         )

@@ -119,6 +119,7 @@ class HandoffState(BaseModel):
     branch_name: str
     ready_for_execution: bool
     cloned: bool = True
+    repo_url: Optional[str] = None
     flags: Dict[str, Any] = Field(default_factory=dict)
     prep_summary: PrepSummary
     provider_config: ProviderConfig

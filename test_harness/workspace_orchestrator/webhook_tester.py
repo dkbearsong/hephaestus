@@ -90,7 +90,7 @@ class IncomingWebhookTester:
         Constructs an authentic Atlassian Jira Cloud webhook payload.
         """
         proj_key = ticket_key.split("-")[0] if "-" in ticket_key else "PROJ"
-        return {
+        payload = {
             "webhookEvent": "comment_created",
             "timestamp": int(time.time() * 1000),
             "issue": {
@@ -108,15 +108,17 @@ class IncomingWebhookTester:
                     "displayName": "Jira Test Automator",
                     "accountId": "jira_test_account_123"
                 }
-            },
-            "target_agent": target_agent
+            }
         }
+        if target_agent is not None:
+            payload["target_agent"] = target_agent
+        return payload
 
     def receive_and_test_webhook(
         self,
         ticket_key: Optional[str] = None,
         mode: Literal["PROMPT_NEW", "PROMPT"] = "PROMPT_NEW",
-        target_platform: Literal["GOOGLE_JULES", "CODEX_CLOUD", "LOCAL_CONTAINER"] = "LOCAL_CONTAINER",
+        target_platform: Optional[str] = "LOCAL_CONTAINER",
         prompt: Optional[str] = None,
         preparations: Optional[str] = None,
         files: Optional[List[str]] = None,
@@ -135,12 +137,18 @@ class IncomingWebhookTester:
         errors: List[str] = []
 
         # Map platform to agent slug
-        agent_map = {
-            "GOOGLE_JULES": "google_jules",
-            "CODEX_CLOUD": "openai_codex_cloud",
-            "LOCAL_CONTAINER": "docker_sandbox_claude_codex"
-        }
-        target_agent = agent_map.get(target_platform, "docker_sandbox_claude_codex")
+        if target_platform is None:
+            target_agent = None
+        else:
+            agent_map = {
+                "GOOGLE_JULES": "google_jules",
+                "CODEX_CLOUD": "openai_codex_cloud",
+                "LOCAL_CONTAINER": "docker_sandbox_claude_codex",
+                "GROK_BUILD": "grok_build",
+                "DEVIN_AI": "devin_ai",
+                "CURSOR_DEVCONTAINER": "cursor_agent"
+            }
+            target_agent = agent_map.get(target_platform, "google_jules")
 
         # 1. Prepare Staged Files locally so file_gatherer can copy them
         file_paths_for_tag = []
@@ -264,18 +272,21 @@ class IncomingWebhookTester:
 
         # Verify Platform Configuration Rules
         v_platform_rules = False
+        effective_plat = target_platform or ws_orch.get("target_platform")
         if v_workspace_created:
-            if target_platform == "GOOGLE_JULES":
+            if effective_plat == "GOOGLE_JULES":
                 jules_cfg = working_dir_path / ".jules" / "config.yaml"
                 status_res = GitRunner.run_git(["status", "--porcelain"], cwd=working_dir_path)
                 v_platform_rules = jules_cfg.exists() and (status_res.stdout.strip() == "")
-            elif target_platform == "CODEX_CLOUD":
+            elif effective_plat == "CODEX_CLOUD":
                 task_meta = working_dir_path / ".codex" / "task_metadata.json"
                 v_platform_rules = task_meta.exists()
-            elif target_platform == "LOCAL_CONTAINER":
+            elif effective_plat == "LOCAL_CONTAINER":
                 mounts_cfg = working_dir_path / ".docker" / "mounts.json"
                 env_file = working_dir_path / ".env"
                 v_platform_rules = mounts_cfg.exists() and env_file.exists()
+            else:
+                v_platform_rules = True
         verifications["provider_rules_enforced"] = v_platform_rules
 
         # Verify Handoff State

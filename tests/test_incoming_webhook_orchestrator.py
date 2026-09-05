@@ -80,3 +80,34 @@ def test_incoming_webhook_tampered_signature_rejected():
     assert res["success"] is True
     assert res["http_status"] == 401
     assert res["verifications"]["tamper_rejected_401"] is True
+
+
+def test_incoming_webhook_defaults_to_active_agent_jules_and_creates_pr():
+    """
+    Tests that an incoming webhook with NO target_agent explicitly supplied
+    automatically defaults to preferences.harness.active ('google_jules'),
+    orchestrates the workspace for GOOGLE_JULES, and executes through Google Jules
+    orchestrator creating a review-ready task with pull request.
+    """
+    import uuid
+    unique_key = f"WH-JULES-{uuid.uuid4().hex[:6].upper()}"
+    res = incoming_webhook_tester.receive_and_test_webhook(
+        ticket_key=unique_key,
+        mode="PROMPT_NEW",
+        target_platform=None,
+        prompt="Implement Google Jules automated ticket handler.",
+        preparations="Configure environment for Jules.\n",
+        verbose=False
+    )
+    assert res["success"] is True, f"Failed verifications: {res['verifications']}, errors: {res.get('errors')}"
+    assert res["http_status"] == 200
+    assert res["verifications"]["pipeline_dispatched"] is True
+
+    # Verify handoff state recorded target_platform is GOOGLE_JULES
+    pipe_res = res["response_body"].get("pipeline_result", {})
+    handoff = pipe_res.get("workspace_orchestration", {})
+    assert handoff.get("target_platform") == "GOOGLE_JULES"
+
+    # Verify review_ready status and PR or session returned
+    assert pipe_res.get("status") == "review_ready"
+    assert "pull_request" in pipe_res or "session_id" in pipe_res

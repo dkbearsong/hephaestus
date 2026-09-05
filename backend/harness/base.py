@@ -13,6 +13,8 @@ class HarnessResult(BaseModel):
     paused_reason: Optional[str] = None
     question_for_user: Optional[str] = None
     requested_permission: Optional[Dict[str, Any]] = None
+    session_id: Optional[str] = None
+    pr_url: Optional[str] = None
 
 class BaseCodingHarness(ABC):
     @abstractmethod

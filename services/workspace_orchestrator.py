@@ -127,6 +127,7 @@ class WorkspaceOrchestrator:
                 "target_platform": payload.target_platform,
                 "working_directory": str(working_dir.resolve()),
                 "branch_name": branch_name,
+                "repo_url": payload.repo_url,
                 "ready_for_execution": False,
                 "cloned": scaffold_res.get("cloned", True),
                 "flags": payload.flags,
@@ -142,6 +143,7 @@ class WorkspaceOrchestrator:
                 target_platform=payload.target_platform,
                 working_directory=str(working_dir.resolve()),
                 branch_name=branch_name,
+                repo_url=payload.repo_url,
                 ready_for_execution=False,
                 cloned=scaffold_res.get("cloned", True),
                 flags=payload.flags,
@@ -232,6 +234,7 @@ class WorkspaceOrchestrator:
             "target_platform": payload.target_platform,
             "working_directory": str(working_dir.resolve()),
             "branch_name": branch_name,
+            "repo_url": remote_url,
             "ready_for_execution": True,
             "cloned": scaffold_res.get("cloned", True),
             "flags": payload.flags,
@@ -248,6 +251,7 @@ class WorkspaceOrchestrator:
             target_platform=payload.target_platform,
             working_directory=str(working_dir.resolve()),
             branch_name=branch_name,
+            repo_url=remote_url,
             ready_for_execution=True,
             cloned=scaffold_res.get("cloned", True),
             flags=payload.flags,
@@ -267,8 +271,10 @@ class WorkspaceOrchestrator:
                         ["commit", "-m", "Commit final manifest and handoff for Google Jules"],
                         cwd=working_dir
                     )
+                if GitRunner.remote_exists(working_dir, "origin"):
+                    GitRunner.push_branch(working_dir, branch_name, remote="origin")
             except Exception as e:
-                logger.warning(f"Final Jules commit encountered: {e}")
+                logger.warning(f"Final Jules commit/push encountered: {e}")
 
         logger.info(
             f"[WorkspaceOrchestrator] Completed orchestration for {payload.ticket_key}. "

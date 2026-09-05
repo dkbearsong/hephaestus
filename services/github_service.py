@@ -97,6 +97,12 @@ class GitHubService:
         try:
             with httpx.Client(timeout=20.0) as client:
                 resp = client.post(url, json=payload, headers=headers)
+                if resp.status_code == 404 and target_org:
+                    # target_org was specified, but might be a personal user account rather than an organization
+                    user_url = f"{self.base_url}/user/repos"
+                    logger.info(f"Org '{target_org}' returned 404; retrying repository creation under user account...")
+                    resp = client.post(user_url, json=payload, headers=headers)
+
                 if resp.status_code == 201:
                     data = resp.json()
                     logger.info(f"Successfully created GitHub repository: {data.get('full_name')}")
@@ -138,14 +144,31 @@ class GitHubService:
         """
         self.require_token("pull request creation")
 
-        if "/" in repo:
-            full_repo = repo
+        import re
+        repo_match = re.search(r"github\.com[:/]([^/]+)/([^/\.]+)", repo)
+        if repo_match:
+            full_repo = f"{repo_match.group(1)}/{repo_match.group(2)}"
+        elif "/" in repo:
+            full_repo = repo.strip("/")
         else:
             owner = self.organization or "user"
             full_repo = f"{owner}/{repo}"
 
         pr_title = title or f"Autonomous changes for {head_branch}"
         pr_body = body or f"Automated pull request submitted by Hephaestus agent for branch `{head_branch}`."
+
+        if head_branch == base_branch:
+            logger.info(f"Head branch '{head_branch}' matches base branch '{base_branch}'; returning repository root link.")
+            return {
+                "id": 0,
+                "number": 0,
+                "html_url": f"https://github.com/{full_repo}",
+                "title": f"Repository initialized for {head_branch}",
+                "head": head_branch,
+                "base": base_branch,
+                "state": "initialized",
+                "simulated": self.simulation_mode or bool(self.token and self.token.startswith("mock_"))
+            }
 
         if self.simulation_mode or (self.token and self.token.startswith("mock_")):
             logger.info(f"[SIMULATION] Created simulated Pull Request for {full_repo} ({head_branch} -> {base_branch})")

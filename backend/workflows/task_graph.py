@@ -195,18 +195,24 @@ class HephaestusWorkflowEngine:
             # Bridge to WorkspaceOrchestrator (scaffolding, provider prep, prep agent, handoff)
             platform_map = {
                 "google_jules": "GOOGLE_JULES",
+                "jules": "GOOGLE_JULES",
                 "openai_codex_cloud": "CODEX_CLOUD",
                 "codex_cloud": "CODEX_CLOUD",
+                "codex": "CODEX_CLOUD",
                 "docker_sandbox_claude_codex": "LOCAL_CONTAINER",
                 "local_container": "LOCAL_CONTAINER",
                 "grok_build": "GROK_BUILD",
+                "grok": "GROK_BUILD",
                 "devin_ai": "DEVIN_AI",
+                "devin": "DEVIN_AI",
                 "cursor_agent": "CURSOR_DEVCONTAINER",
-                "cursor_dev_container": "CURSOR_DEVCONTAINER"
+                "cursor_dev_container": "CURSOR_DEVCONTAINER",
+                "cursor_devcontainer": "CURSOR_DEVCONTAINER"
             }
+            effective_agent = target_agent or getattr(preferences.harness, "active", "google_jules")
             resolved_platform = platform_map.get(
-                str(target_agent).lower() if target_agent else "",
-                "LOCAL_CONTAINER"
+                str(effective_agent).lower() if effective_agent else "",
+                "GOOGLE_JULES" if str(effective_agent).lower() in ("google_jules", "jules") else "LOCAL_CONTAINER"
             )
 
             handoff_record = None
@@ -225,7 +231,7 @@ class HephaestusWorkflowEngine:
 
                 # Determine if cloning is required or skipped based on flags and agent type
                 merged_flags = flags or prompt_meta.get("flags", {})
-                agent_instance = self.coding_orchestrator.get_agent(target_agent)
+                agent_instance = self.coding_orchestrator.get_agent(effective_agent)
                 agent_needs_clone = getattr(agent_instance, "requires_local_clone", True)
 
                 flag_clone = merged_flags.get("clone")
@@ -251,6 +257,9 @@ class HephaestusWorkflowEngine:
                 handoff_state = workspace_orchestrator.orchestrate(ws_payload)
                 ticket.branch_name = handoff_state.branch_name
                 handoff_record = handoff_state.model_dump()
+                if handoff_state.repo_url and not project.repo_url:
+                    project.repo_url = handoff_state.repo_url
+                    session.commit()
             except Exception as e:
                 logger.warning(f"WorkspaceOrchestrator step encountered: {e}")
 
@@ -272,10 +281,11 @@ class HephaestusWorkflowEngine:
             # Step 5: Execute with Coding Agent Orchestrator
             # (which validates prompt, initiates container environment, and executes task)
             active_harness = self.harness
+            effective_repo = project.repo_url or (handoff_record.get("repo_url") if handoff_record else None) or resolved_repo
             container_info = {
                 "project_key": project.key,
                 "branch_name": ticket.branch_name,
-                "repo_url": project.repo_url,
+                "repo_url": effective_repo,
                 "staged_files": staged_files,
                 "is_new_project": is_new_proj,
                 "preparations_result": prep_result,
@@ -287,7 +297,7 @@ class HephaestusWorkflowEngine:
                 harness_result = self._harness.run_task(
                     prompt=cleaned_prompt,
                     container_info=container_info,
-                    project_config={"name": project.name, "key": project.key, "branch_name": ticket.branch_name},
+                    project_config={"name": project.name, "key": project.key, "branch_name": ticket.branch_name, "repo_url": effective_repo},
                     system_prompt_additions=project.system_prompt_additions
                 )
             else:
@@ -296,16 +306,16 @@ class HephaestusWorkflowEngine:
                     prompt=cleaned_prompt,
                     project_key=project.key,
                     branch_name=ticket.branch_name,
-                    repo_url=project.repo_url,
+                    repo_url=effective_repo,
                     staged_files=staged_files,
                     is_new_project=is_new_proj,
                     system_prompt_additions=project.system_prompt_additions,
                     preparations_result=prep_result,
-                    target_agent=target_agent
+                    target_agent=effective_agent
                 )
 
             ticket.container_id = f"container_{project.key}_{ticket.branch_name}"
-            ticket.image_id = f"sandbox_{target_agent or 'active'}"
+            ticket.image_id = f"sandbox_{effective_agent or 'active'}"
             session.commit()
 
             # Step 6: Handle Result (Paused vs Completed)
@@ -349,6 +359,60 @@ class HephaestusWorkflowEngine:
             else: # completed
                 ticket.status = "review_ready"
 
+                # Check if a live cloud agent session was started or if changes need commit & PR
+                pr_info = None
+                working_dir_path = handoff_record.get("working_directory") if handoff_record else None
+                has_remote_jules = bool(
+                    harness_result.session_id or
+                    (harness_result.full_log and "[Google Jules API] Connected to live Jules API" in harness_result.full_log)
+                )
+
+                if has_remote_jules:
+                    logger.info("[Workflow Pipeline] Remote Google Jules session active (%s). AUTO_CREATE_PR will be handled by Jules in cloud.", harness_result.session_id)
+                    self.jira_service.add_comment(
+                        ticket.jira_key,
+                        f"🚀 **Google Jules Task Dispatched**: Remote session `{harness_result.session_id or 'active'}` created in Google Cloud Workspace.\n\n"
+                        f"Jules is processing the changes and will automatically open a Pull Request upon completion."
+                    )
+                else:
+                    # In local sandbox / fallback mode, commit any generated code and create PR
+                    if working_dir_path:
+                        try:
+                            from services.scaffolding import GitRunner
+                            wdir = Path(working_dir_path)
+                            GitRunner.run_git(["add", "."], cwd=wdir)
+                            status_res = GitRunner.run_git(["status", "--porcelain"], cwd=wdir)
+                            if status_res.stdout.strip():
+                                GitRunner.run_git(
+                                    ["commit", "-m", f"feat({ticket.jira_key.lower()}): automated implementation by {effective_agent}"],
+                                    cwd=wdir
+                                )
+                            if GitRunner.remote_exists(wdir, "origin"):
+                                GitRunner.push_branch(wdir, ticket.branch_name, remote="origin", set_upstream=True)
+                        except Exception as git_err:
+                            logger.warning(f"Git commit/push in completed stage encountered: {git_err}")
+
+                    # Attempt GitHub PR creation
+                    target_repo_for_pr = effective_repo or (handoff_record.get("repo_url") if handoff_record else None)
+                    if target_repo_for_pr:
+                        try:
+                            from services.github_service import github_service
+                            pr_info = github_service.create_pull_request(
+                                repo=target_repo_for_pr,
+                                head_branch=ticket.branch_name,
+                                base_branch="main",
+                                title=f"[{ticket.jira_key}] {ticket.title}",
+                                body=f"Automated pull request submitted by Hephaestus ({effective_agent}).\n\n### Task Instructions\n{cleaned_prompt}\n\n### Changes Summary\n{harness_result.summary_changes or 'Automated implementation completed.'}"
+                            )
+                            logger.info(f"Created GitHub Pull Request: {pr_info.get('html_url')}")
+                            self.jira_service.add_comment(
+                                ticket.jira_key,
+                                f"✅ **Implementation Completed**: Coding agent completed task.\n\n"
+                                f"🔗 **Pull Request**: [{pr_info.get('title', 'View PR')}]({pr_info.get('html_url')})"
+                            )
+                        except Exception as pr_err:
+                            logger.warning(f"Could not create GitHub PR: {pr_err}")
+
                 # Persist Work Log with diff and breakdown
                 work_log = WorkLog(
                     ticket_id=ticket.id,
@@ -388,7 +452,9 @@ class HephaestusWorkflowEngine:
                     "summary_changes": harness_result.summary_changes,
                     "preparations_result": prep_result,
                     "git_diff": harness_result.git_diff,
-                    "workspace_orchestration": handoff_record
+                    "workspace_orchestration": handoff_record,
+                    "pull_request": pr_info,
+                    "session_id": harness_result.session_id
                 }
 
         finally:
