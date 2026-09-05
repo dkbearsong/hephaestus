@@ -14,21 +14,17 @@ export PYTHONPATH="$DIR"
 .venv/bin/uvicorn backend.main:app --host 0.0.0.0 --port 8000 &
 PYTHON_PID=$!
 
-# 2. Start Express Gateway
-echo "Starting Express Gateway on http://localhost:3001..."
-node server/index.js &
-EXPRESS_PID=$!
-
+# 2. Cleanup hook
 cleanup() {
     echo "Shutting down Hephaestus services..."
-    kill $PYTHON_PID $EXPRESS_PID 2>/dev/null || true
+    kill $PYTHON_PID 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 
 echo ""
 echo "🔥 System Ready!"
-echo "➡️  Express & Frontend Web App: http://localhost:3001"
-echo "➡️  Python Harness API:          http://localhost:8000"
+echo "➡️  Python Harness API & Webhook Listener: http://localhost:8000"
+echo "➡️  Jira Webhook Endpoint:                 http://localhost:8000/api/webhooks/jira"
 echo ""
 
 wait
