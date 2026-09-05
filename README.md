@@ -7,7 +7,7 @@ Hephaestus is an autonomous coding agent harness and workflow system designed fo
 ## 🚀 Key Features
 
 1. **Jira Webhook Automation**:
-   - Fires on tickets with label `ai-code` and comment prefix `<|prompt|>` or `<|prompt-new|>`.
+   - Fires on tickets with label `run_ai_orchestrator` and comment prefix `<|prompt|>` or `<|prompt-new|>`.
    - Automatically removes the trigger label immediately to prevent re-triggering loops.
    - Updates Jira with completion label `ai-merged` and moves the ticket to Complete when merged.
 2. **Prompt & File Preprocessor**:

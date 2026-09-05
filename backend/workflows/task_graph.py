@@ -1,3 +1,4 @@
+import os
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -75,7 +76,9 @@ class HephaestusWorkflowEngine:
         issue_summary: str = "",
         project_key_hint: str = "",
         preparations: Optional[str] = None,
-        target_agent: Optional[str] = None
+        target_agent: Optional[str] = None,
+        is_new_project: Optional[bool] = None,
+        flags: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Main workflow pipeline triggered by incoming Jira Webhook.
@@ -94,8 +97,30 @@ class HephaestusWorkflowEngine:
         # Step 1: Prompt extraction (includes optional <|preparations|>)
         is_prompt, prompt_meta = self.prompt_extractor.extract_prompt(comment_text, task_id)
         if not is_prompt:
-            logger.info("Comment does not contain trigger prefix. Skipping.")
-            return {"success": False, "reason": "No prompt trigger prefix found"}
+            # Check if comment_text was already stripped of prompt prefix by the webhook watcher
+            if comment_text and comment_text.strip():
+                from backend.preprocessor.md_file_writer import md_file_writer
+                files, prompt_instructions = self.prompt_extractor.extract_files(comment_text)
+                writer_res = md_file_writer.write_prompt_and_preparations(
+                    task_id=task_id,
+                    prompt_text=prompt_instructions,
+                    preparations=preparations
+                )
+                is_prompt = True
+                prompt_meta = {
+                    "task_id": task_id,
+                    "is_new_project": bool(is_new_project),
+                    "raw_text": comment_text,
+                    "cleaned_prompt": comment_text,
+                    "prompt_instructions": prompt_instructions,
+                    "files": files,
+                    "task_staging_dir": writer_res["task_staging_dir"],
+                    "prompt_file_path": writer_res["prompt_file_path"],
+                    "preparations": preparations
+                }
+            else:
+                logger.info("Comment does not contain trigger prefix. Skipping.")
+                return {"success": False, "reason": "No prompt trigger prefix found"}
 
         # Step 2: Remove trigger label in Jira to prevent infinite webhook loops
         self.jira_service.remove_trigger_label(jira_issue_key)
@@ -127,7 +152,7 @@ class HephaestusWorkflowEngine:
 
         # Determine project key
         proj_key = project_key_hint or jira_issue_key.split("-")[0] if "-" in jira_issue_key else "DEFAULT"
-        is_new_proj = prompt_meta.get("is_new_project", False)
+        is_new_proj = is_new_project if is_new_project is not None else prompt_meta.get("is_new_project", False)
 
         session = self.get_session()
         try:
@@ -167,6 +192,83 @@ class HephaestusWorkflowEngine:
                     ticket.branch_name = branch_name
                 session.commit()
 
+            # Bridge to WorkspaceOrchestrator (scaffolding, provider prep, prep agent, handoff)
+            platform_map = {
+                "google_jules": "GOOGLE_JULES",
+                "openai_codex_cloud": "CODEX_CLOUD",
+                "codex_cloud": "CODEX_CLOUD",
+                "docker_sandbox_claude_codex": "LOCAL_CONTAINER",
+                "local_container": "LOCAL_CONTAINER",
+                "grok_build": "GROK_BUILD",
+                "devin_ai": "DEVIN_AI",
+                "cursor_agent": "CURSOR_DEVCONTAINER",
+                "cursor_dev_container": "CURSOR_DEVCONTAINER"
+            }
+            resolved_platform = platform_map.get(
+                str(target_agent).lower() if target_agent else "",
+                "LOCAL_CONTAINER"
+            )
+
+            handoff_record = None
+            try:
+                from services.models import WorkspaceTriggerPayload
+                from services.workspace_orchestrator import workspace_orchestrator
+                from pathlib import Path
+                from backend.config import ROOT_DIR
+
+                workspaces_root = ROOT_DIR / "sandboxes" / "workspaces"
+                workspaces_root.mkdir(parents=True, exist_ok=True)
+
+                resolved_repo = getattr(project, "repo_url", None)
+                if not resolved_repo and not is_new_proj:
+                    resolved_repo = os.getenv("DEFAULT_REPO_URL") or (str(ROOT_DIR) if (ROOT_DIR / ".git").exists() else None)
+
+                # Determine if cloning is required or skipped based on flags and agent type
+                merged_flags = flags or prompt_meta.get("flags", {})
+                agent_instance = self.coding_orchestrator.get_agent(target_agent)
+                agent_needs_clone = getattr(agent_instance, "requires_local_clone", True)
+
+                flag_clone = merged_flags.get("clone")
+                flag_skip_clone = merged_flags.get("skip_clone")
+                if flag_clone is not None:
+                    skip_clone = not bool(flag_clone)
+                elif flag_skip_clone is not None:
+                    skip_clone = bool(flag_skip_clone)
+                else:
+                    skip_clone = not agent_needs_clone
+
+                ws_payload = WorkspaceTriggerPayload(
+                    ticket_key=jira_issue_key,
+                    mode="PROMPT_NEW" if is_new_proj else "PROMPT",
+                    target_platform=resolved_platform,
+                    repo_url=resolved_repo,
+                    staging_dir=Path(staging_dir),
+                    workspaces_root=workspaces_root,
+                    custom_branch_name=ticket.branch_name,
+                    skip_clone=skip_clone,
+                    flags=merged_flags
+                )
+                handoff_state = workspace_orchestrator.orchestrate(ws_payload)
+                ticket.branch_name = handoff_state.branch_name
+                handoff_record = handoff_state.model_dump()
+            except Exception as e:
+                logger.warning(f"WorkspaceOrchestrator step encountered: {e}")
+
+            # If workspace preparation was blocked, skip coding agent platform dispatch
+            if handoff_record and not handoff_record.get("ready_for_execution", True):
+                blocker_reason = handoff_record.get("prep_summary", {}).get("blocker_reason") or "Preparation phase blocked"
+                logger.warning(
+                    f"Skipping coding agent platform dispatch for {jira_issue_key}: {blocker_reason}"
+                )
+                return {
+                    "success": False,
+                    "task_id": task_id,
+                    "jira_key": jira_issue_key,
+                    "status": "BLOCKED",
+                    "reason": blocker_reason,
+                    "workspace_orchestration": handoff_record
+                }
+
             # Step 5: Execute with Coding Agent Orchestrator
             # (which validates prompt, initiates container environment, and executes task)
             active_harness = self.harness
@@ -176,7 +278,8 @@ class HephaestusWorkflowEngine:
                 "repo_url": project.repo_url,
                 "staged_files": staged_files,
                 "is_new_project": is_new_proj,
-                "preparations_result": prep_result
+                "preparations_result": prep_result,
+                "workspace_orchestration": handoff_record
             }
 
             if hasattr(self, "_harness") and self._harness is not None:
@@ -284,7 +387,8 @@ class HephaestusWorkflowEngine:
                     "work_log_id": work_log.id,
                     "summary_changes": harness_result.summary_changes,
                     "preparations_result": prep_result,
-                    "git_diff": harness_result.git_diff
+                    "git_diff": harness_result.git_diff,
+                    "workspace_orchestration": handoff_record
                 }
 
         finally:

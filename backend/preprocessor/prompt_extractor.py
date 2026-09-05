@@ -8,6 +8,48 @@ class PromptExtractor:
         self.update_prefix = preferences.jira.update_trigger_prefix # "<|prompt|>"
         self.new_proj_prefix = preferences.jira.new_project_trigger_prefix # "<|prompt-new|>"
         self.prep_prefix = getattr(preferences.jira, "preparations_trigger_prefix", "<|preparations|>")
+        self.flags_prefix = "<|flags|>"
+
+    def extract_flags(self, text: str) -> Tuple[Dict[str, Any], str]:
+        """
+        Extracts optional <|flags|> tag containing YAML deterministic settings.
+        Supports both block format (<|flags|>...</|flags|>) and open format.
+        Returns (flags_dict, text_without_flags).
+        """
+        if not text or "<|flags|>" not in text:
+            return {}, text
+
+        block_pattern = re.compile(
+            r"<\|flags\|>(.*?)(?:<\/\|flags\|>|<\|endflags\|>)",
+            re.DOTALL | re.IGNORECASE
+        )
+        match = block_pattern.search(text)
+        if match:
+            flags_raw = match.group(1).strip()
+            remaining = text[:match.start()] + text[match.end():]
+        else:
+            open_pattern = re.compile(
+                r"<\|flags\|>(.*?)(?=<\|preparations\|>|<\|files\|>|<\|prompt-new\|>|<\|prompt\|>|$)",
+                re.DOTALL | re.IGNORECASE
+            )
+            match = open_pattern.search(text)
+            if match:
+                flags_raw = match.group(1).strip()
+                remaining = text[:match.start()] + text[match.end():]
+            else:
+                return {}, text
+
+        flags_dict = {}
+        if flags_raw:
+            try:
+                import yaml
+                loaded = yaml.safe_load(flags_raw)
+                if isinstance(loaded, dict):
+                    flags_dict = loaded
+            except Exception:
+                flags_dict = {}
+
+        return flags_dict, remaining.strip()
 
     def extract_preparations(self, text: str) -> Tuple[Optional[str], str]:
         """
@@ -100,8 +142,11 @@ class PromptExtractor:
           - Saves clean prompt to staging/{task_id}/prompt.md
           - Returns (is_prompt, metadata)
         """
-        # Step 1: Extract optional preparations instructions
-        preparations, text_without_prep = self.extract_preparations(comment_text)
+        # Step 1: Extract optional flags (YAML format for deterministic settings)
+        flags, text_without_flags = self.extract_flags(comment_text)
+
+        # Step 2: Extract optional preparations instructions
+        preparations, text_without_prep = self.extract_preparations(text_without_flags)
 
         trimmed = text_without_prep.strip()
         is_new_project = False
@@ -131,6 +176,8 @@ class PromptExtractor:
         return True, {
             "task_id": task_id,
             "is_new_project": is_new_project,
+            "flags": flags,
+            "has_flags": len(flags) > 0,
             "raw_text": comment_text,
             "cleaned_prompt": raw_prompt,
             "prompt_instructions": prompt_instructions,

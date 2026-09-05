@@ -56,7 +56,7 @@ class TestCaseGenerator:
                         "fields": {
                             "summary": f"Feature requirement for {proj}",
                             "project": {"key": proj},
-                            "labels": ["ai-code"]
+                            "labels": ["run_ai_orchestrator"]
                         }
                     }
                 },
@@ -98,7 +98,7 @@ class TestCaseGenerator:
                         "fields": {
                             "summary": f"Scaffold {proj} architecture",
                             "project": {"key": proj},
-                            "labels": ["ai-code"]
+                            "labels": ["run_ai_orchestrator"]
                         }
                     }
                 },

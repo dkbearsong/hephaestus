@@ -43,6 +43,7 @@ class BaseCodingAgent(BaseCodingHarness, ABC):
     agent_id: str = "base_agent"
     display_name: str = "Base Coding Agent"
     container_type: str = "generic_container"
+    requires_local_clone: bool = True
 
     def validate_prompt(self, prompt: str) -> Dict[str, Any]:
         """

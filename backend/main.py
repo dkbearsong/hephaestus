@@ -87,7 +87,10 @@ async def process_webhook(payload: WebhookPayload, request: Request):
     )
     return result
 
+@app.post("/")
 @app.post("/api/webhooks/jira")
+@app.post("/webhook")
+@app.post("/api/webhook")
 async def receive_jira_webhook(request: Request):
     """Direct Jira Cloud webhook receiver endpoint with secret verification."""
     raw_body = await request.body()
@@ -106,6 +109,20 @@ async def receive_jira_webhook(request: Request):
     if not formatted.is_ai_trigger:
         return {"success": True, "message": "Ignored: No prompt tag", "payload": formatted.model_dump()}
     result = webhook_watcher.dispatch_to_pipeline(formatted)
+
+    ws_orch = result.get("workspace_orchestration") if isinstance(result, dict) else None
+    if ws_orch:
+        logger.info(
+            "\n" + "=" * 70 + "\n"
+            f"🚀 [WEBHOOK PROCESSED & WORKSPACE ORCHESTRATED]\n"
+            f"• Ticket    : {formatted.jira_issue_key}\n"
+            f"• Workspace : {ws_orch.get('working_directory')}\n"
+            f"• Branch    : {ws_orch.get('branch_name')}\n"
+            f"• Platform  : {ws_orch.get('target_platform')}\n"
+            f"• Ready     : {ws_orch.get('ready_for_execution')}\n"
+            + "=" * 70
+        )
+
     return {"success": True, "pipeline_result": result, "formatted": formatted.model_dump()}
 
 @app.get("/api/webhooks/test-jira-push")

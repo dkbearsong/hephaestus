@@ -95,7 +95,7 @@ class HarnessSettings(BaseModel):
     langgraph_agent: LangGraphConfig = Field(default_factory=LangGraphConfig)
 
 class JiraSettings(BaseModel):
-    trigger_label: str = "ai-code"
+    trigger_label: str = "run_ai_orchestrator"
     new_project_trigger_prefix: str = "<|prompt-new|>"
     update_trigger_prefix: str = "<|prompt|>"
     preparations_trigger_prefix: str = "<|preparations|>"
@@ -153,7 +153,12 @@ JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN", "")
 JIRA_PROJECT_KEY = os.getenv("JIRA_PROJECT_KEY", "")
 JIRA_WEBHOOK_SECRET = os.getenv("JIRA_WEBHOOK_SECRET", "hephaestus_webhook_secret_2026")
 
+# GitHub Integration Configuration
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
+GITHUB_ORGANIZATION = os.getenv("GITHUB_ORGANIZATION", os.getenv("GITHUB_ORG", ""))
+
 # Provider & Agent API Keys
+JULES_API_KEY = os.getenv("JULES_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", os.getenv("CLAUDE_API_KEY", ""))

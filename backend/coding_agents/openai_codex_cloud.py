@@ -17,6 +17,7 @@ class OpenAICodexCloudOrchestrator(BaseCodingAgent):
     agent_id = "openai_codex_cloud"
     display_name = "OpenAI Codex (Cloud Sandbox)"
     container_type = "openai_cloud_sandbox"
+    requires_local_clone = False
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or OPENAI_API_KEY

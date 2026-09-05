@@ -22,7 +22,7 @@
             "key": "PAY"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -57,7 +57,7 @@
             "key": "AUTH"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -92,7 +92,7 @@
             "key": "BILL"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -127,7 +127,7 @@
             "key": "CORE"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -162,7 +162,7 @@
             "key": "SEARCH"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -197,7 +197,7 @@
             "key": "DATA"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -232,7 +232,7 @@
             "key": "API"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -267,7 +267,7 @@
             "key": "NOTIF"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -302,7 +302,7 @@
             "key": "OPS"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -337,7 +337,7 @@
             "key": "UI"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -372,7 +372,7 @@
             "key": "NEWPAY"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -407,7 +407,7 @@
             "key": "NEWAUTH"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -442,7 +442,7 @@
             "key": "GATEWAY"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -477,7 +477,7 @@
             "key": "WORKER"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -512,7 +512,7 @@
             "key": "ANALYTICS"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }
@@ -547,7 +547,7 @@
             "key": "INGEST"
           },
           "labels": [
-            "ai-code"
+            "run_ai_orchestrator"
           ]
         }
       }

@@ -19,6 +19,8 @@ PREPARATIONS_TAG = "<|preparations|>"
 PREPARATIONS_END_TAG = "</|preparations|>"
 FILES_TAG = "<|files|>"
 FILES_END_TAG = "</|files|>"
+FLAGS_TAG = "<|flags|>"
+FLAGS_END_TAG = "</|flags|>"
 
 class WebhookSecretVerificationError(Exception):
     """Raised when an incoming webhook fails secret or signature verification."""
@@ -39,6 +41,8 @@ class FormattedWebhookPayload(BaseModel):
     raw_comment: str = Field(default="", description="Original raw comment text before stripping")
     files: List[str] = Field(default_factory=list, description="List of file paths extracted from <|files|> tag")
     has_files: bool = Field(default=False, description="True if files tag was provided")
+    flags: Dict[str, Any] = Field(default_factory=dict, description="Deterministic YAML configuration flags from <|flags|> tag")
+    has_flags: bool = Field(default=False, description="True if flags tag was provided")
     preparations: Optional[str] = Field(default=None, description="Optional setup / container / MCP instructions extracted from <|preparations|> tag")
     has_preparations: bool = Field(default=False, description="True if preparations tag was provided")
     author: Dict[str, Any] = Field(default_factory=dict, description="Comment author details")
@@ -203,20 +207,65 @@ class WebhookPayloadFormatter:
         return raw_paths, remaining.strip()
 
     @classmethod
-    def extract_tags_and_content(cls, text: str) -> Tuple[Optional[str], Optional[str], List[str], str, str]:
+    def extract_flags_tag(cls, text: str) -> Tuple[Dict[str, Any], str]:
+        """
+        Extracts optional <|flags|> tag containing deterministic YAML configuration.
+        Returns (flags_dict, text_without_flags).
+        """
+        if not text or FLAGS_TAG not in text:
+            return {}, text
+
+        block_pattern = re.compile(
+            r"<\|flags\|>(.*?)(?:<\/\|flags\|>|<\|endflags\|>)",
+            re.DOTALL | re.IGNORECASE
+        )
+        match = block_pattern.search(text)
+        if match:
+            flags_raw = match.group(1).strip()
+            remaining = text[:match.start()] + text[match.end():]
+        else:
+            open_pattern = re.compile(
+                r"<\|flags\|>(.*?)(?=<\|preparations\|>|<\|files\|>|<\|prompt-new\|>|<\|prompt\|>|$)",
+                re.DOTALL | re.IGNORECASE
+            )
+            match = open_pattern.search(text)
+            if match:
+                flags_raw = match.group(1).strip()
+                remaining = text[:match.start()] + text[match.end():]
+            else:
+                return {}, text
+
+        flags_dict = {}
+        if flags_raw:
+            try:
+                import yaml
+                loaded = yaml.safe_load(flags_raw)
+                if isinstance(loaded, dict):
+                    flags_dict = loaded
+            except Exception:
+                flags_dict = {}
+
+        return flags_dict, remaining.strip()
+
+    @classmethod
+    def extract_tags_and_content(cls, text: str) -> Tuple[Optional[str], Optional[str], List[str], Dict[str, Any], str, str]:
         """
         Extracts all structured tag components from comment text:
         - prompt_tag: 'prompt', 'prompt-new', or None
         - preparations: extracted setup/container/MCP instructions, or None
         - files: list of referenced file paths, or []
+        - flags: deterministic YAML configuration settings, or {}
         - in_memory_comment: comment with prompt and preparations tags stripped (retains files block for file gatherer)
         - prompt_instructions: pure clean prompt instructions with prompt, preparations, AND files blocks stripped
         """
         if not text:
-            return None, None, [], "", ""
+            return None, None, [], {}, "", ""
+
+        # Extract optional flags
+        flags, text_without_flags = cls.extract_flags_tag(text)
 
         # Extract optional preparations
-        preparations, text_without_prep = cls.extract_preparations_tag(text)
+        preparations, text_without_prep = cls.extract_preparations_tag(text_without_flags)
 
         # Extract files
         files, text_without_prep_or_files = cls.extract_files_tag(text_without_prep)
@@ -241,7 +290,7 @@ class WebhookPayloadFormatter:
         elif stripped_clean.startswith(PROMPT_TAG):
             prompt_instructions = stripped_clean[len(PROMPT_TAG):].lstrip()
 
-        return tag_type, preparations, files, in_memory_copy, prompt_instructions
+        return tag_type, preparations, files, flags, in_memory_copy, prompt_instructions
 
     @classmethod
     def identify_and_strip_prompt_tag(cls, text: str) -> Tuple[Optional[str], str]:
@@ -250,7 +299,7 @@ class WebhookPayloadFormatter:
         and strips the tags (including optional preparations) from the in-memory copy of the comment.
         Maintains backwards-compatible return signature: (tag_type, in_memory_comment).
         """
-        tag_type, _, _, in_memory_copy, _ = cls.extract_tags_and_content(text)
+        tag_type, _, _, _, in_memory_copy, _ = cls.extract_tags_and_content(text)
         return tag_type, in_memory_copy
 
     @classmethod
@@ -314,6 +363,8 @@ class WebhookPayloadFormatter:
                 metadata["jira_status"] = fields["status"].get("name", "")
 
         # Direct fields fallback
+        if "target_agent" in raw_data:
+            metadata["target_agent"] = raw_data.get("target_agent")
         if not issue_key and "jira_issue_key" in raw_data:
             issue_key = str(raw_data.get("jira_issue_key") or "")
         if not issue_summary and "summary" in raw_data:
@@ -330,8 +381,8 @@ class WebhookPayloadFormatter:
         if not issue_key:
             issue_key = f"{project_key}-UNKNOWN"
 
-        # Extract prompt tag, optional preparations tag, files, and clean in-memory comment
-        tag_type, preparations, files, in_memory_comment, prompt_instructions = cls.extract_tags_and_content(raw_comment)
+        # Extract prompt tag, optional preparations tag, files, flags, and clean in-memory comment
+        tag_type, preparations, files, flags, in_memory_comment, prompt_instructions = cls.extract_tags_and_content(raw_comment)
         is_ai_trigger = tag_type is not None
 
         return FormattedWebhookPayload(
@@ -345,6 +396,8 @@ class WebhookPayloadFormatter:
             raw_comment=raw_comment,
             files=files,
             has_files=len(files) > 0,
+            flags=flags,
+            has_flags=len(flags) > 0,
             preparations=preparations,
             has_preparations=preparations is not None,
             author=author,
@@ -520,13 +573,32 @@ class WebhookWatcher:
 
         if self.pipeline_engine:
             try:
-                result = self.pipeline_engine.process_webhook_prompt(
-                    comment_text=formatted.in_memory_comment,
-                    jira_issue_key=formatted.jira_issue_key,
-                    issue_summary=formatted.summary,
-                    project_key_hint=formatted.project_key,
-                    preparations=formatted.preparations
-                )
+                kwargs = {
+                    "comment_text": formatted.in_memory_comment,
+                    "jira_issue_key": formatted.jira_issue_key,
+                    "issue_summary": formatted.summary,
+                    "project_key_hint": formatted.project_key,
+                    "preparations": formatted.preparations
+                }
+                try:
+                    import inspect
+                    sig = inspect.signature(self.pipeline_engine.process_webhook_prompt)
+                    params = sig.parameters
+                    has_var_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
+
+                    target_agent = formatted.metadata.get("target_agent")
+                    if target_agent is not None and ("target_agent" in params or has_var_kwargs):
+                        kwargs["target_agent"] = target_agent
+
+                    if formatted.prompt_tag == "prompt-new" and ("is_new_project" in params or has_var_kwargs):
+                        kwargs["is_new_project"] = True
+
+                    if formatted.flags and ("flags" in params or has_var_kwargs):
+                        kwargs["flags"] = formatted.flags
+                except Exception:
+                    pass
+
+                result = self.pipeline_engine.process_webhook_prompt(**kwargs)
                 success = result.get("success", True)
                 status_str = "SUCCESS" if success else "FAILED"
                 self.log_webhook_event(

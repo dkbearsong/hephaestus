@@ -3,14 +3,16 @@ Google Jules Coding Agent Orchestrator
 Integration with Google Jules asynchronous coding agent and Google Cloud Workspace containers.
 """
 
+import os
 import re
 import uuid
 import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+import httpx
 from backend.coding_agents.base import BaseCodingAgent, ContainerEnvironment
 from backend.harness.base import HarnessResult
-from backend.config import GEMINI_API_KEY
+from backend.config import GEMINI_API_KEY, JULES_API_KEY
 
 logger = logging.getLogger("hephaestus.coding_agents.google_jules")
 
@@ -18,9 +20,10 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
     agent_id = "google_jules"
     display_name = "Google Jules (Cloud Workspace)"
     container_type = "google_cloud_workspace"
+    requires_local_clone = False
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or GEMINI_API_KEY
+        self.api_key = api_key or JULES_API_KEY or os.getenv("JULES_API_KEY", "") or GEMINI_API_KEY
         logger.info("[Google Jules] Initialized Google Jules Orchestrator adapter.")
 
     def initiate_container(
@@ -63,6 +66,62 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
         )
         logger.info("[Google Jules] Initiated Google Cloud Workspace container session: %s (%s)", container_id, container_name)
         return env
+
+    def _dispatch_jules_api(
+        self,
+        prompt: str,
+        container_env: ContainerEnvironment,
+        project_config: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Dispatches session creation to the official Google Jules REST API
+        (https://developers.google.com/jules/api).
+        Uses X-Goog-Api-Key generated from jules.google.com/settings.
+        """
+        if not self.api_key or self.api_key.startswith("mock_") or "dummy" in self.api_key:
+            return None
+
+        # Resolve GitHub repo coordinates
+        repo_url = project_config.get("repo_url") or container_env.metadata.get("repo_url") or ""
+        repo_match = re.search(r"github\.com[:/]([^/]+)/([^/\.]+)", repo_url)
+        if not repo_match:
+            logger.info("[Google Jules API] No GitHub repository found in repo_url; skipping remote Jules API dispatch.")
+            return None
+
+        owner, repo_name = repo_match.group(1), repo_match.group(2)
+        source_id = f"sources/github/{owner}/{repo_name}"
+        branch = container_env.branch_name or "main"
+
+        url = "https://jules.googleapis.com/v1alpha/sessions"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": self.api_key,
+            "User-Agent": "Hephaestus-Jules-Connector/1.0"
+        }
+        payload = {
+            "prompt": prompt,
+            "sourceContext": {
+                "source": source_id,
+                "githubRepoContext": {
+                    "startingBranch": branch
+                }
+            },
+            "automationMode": "AUTO_CREATE_PR"
+        }
+
+        try:
+            with httpx.Client(timeout=20.0) as client:
+                resp = client.post(url, json=payload, headers=headers)
+                if resp.status_code in (200, 201):
+                    data = resp.json()
+                    logger.info("[Google Jules API] Successfully initiated Jules session: %s", data.get("name"))
+                    return data
+                else:
+                    logger.warning("[Google Jules API] Session request returned status %d: %s", resp.status_code, resp.text[:200])
+                    return None
+        except Exception as ex:
+            logger.warning("[Google Jules API] Network dispatch error: %s", ex)
+            return None
 
     def execute_in_container(
         self,
@@ -127,6 +186,15 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
                 question_for_user=f"Google Jules needs clarification before proceeding: {prompt}",
                 full_log="\n".join(logs)
             )
+
+        # Attempt dispatch to official Google Jules REST API (https://developers.google.com/jules/api)
+        jules_session = self._dispatch_jules_api(prompt, container_env, project_config)
+        if jules_session:
+            session_name = jules_session.get("name") or jules_session.get("id", "active_session")
+            logs.append(f"[Google Jules API] Connected to live Jules API. Created remote session: {session_name}")
+            logs.append("[Google Jules API] Jules cloud worker assigned with automationMode: AUTO_CREATE_PR.")
+        else:
+            logs.append("[Google Jules API] Operating in local workspace orchestration mode.")
 
         # In-container code synthesis and diff generation
         logs.append("[Google Jules] Analyzing codebase AST and generating patch in cloud workspace...")

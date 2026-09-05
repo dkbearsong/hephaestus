@@ -108,7 +108,7 @@ harness:
 
 # Jira Webhook and Integration Settings
 jira:
-  trigger_label: "ai-code"
+  trigger_label: "run_ai_orchestrator"
   new_project_trigger_prefix: "<|prompt-new|>"
   update_trigger_prefix: "<|prompt|>"
   preparations_trigger_prefix: "<|preparations|>"
@@ -121,9 +121,21 @@ mcp_tools:
   tools_directory: "mcp_tools"
   enabled:
     - "datetime_tool"
+    - "file_writer_tool"
     - "postgres_inspector"
     - "test_runner"
   available:
     - "datetime_tool"
+    - "file_writer_tool"
     - "postgres_inspector"
     - "test_runner"
+
+# Stdio MCP Servers Configuration
+mcp_servers:
+  datetime_tool:
+    command: "python"
+    args: ["-m", "mcp_tools.datetime_tool"]
+  file_writer_tool:
+    command: "python"
+    args: ["-m", "mcp_tools.file_writer_tool"]
+

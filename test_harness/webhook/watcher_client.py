@@ -130,7 +130,7 @@ class WebhookWatcherClient(BaseTestComponent):
                         "key": proj,
                         "name": f"Project {proj}"
                     },
-                    "labels": ["ai-code"],
+                    "labels": ["run_ai_orchestrator"],
                     "status": {"name": "In Progress"}
                 }
             }

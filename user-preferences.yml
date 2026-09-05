@@ -1,0 +1,8 @@
+# Hephaestus User Preferences - External MCP Servers
+mcp_servers:
+  datetime_tool:
+    command: "python"
+    args: ["-m", "mcp_tools.datetime_tool"]
+  file_writer_tool:
+    command: "python"
+    args: ["-m", "mcp_tools.file_writer_tool"]

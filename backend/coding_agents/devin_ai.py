@@ -17,6 +17,7 @@ class DevinAIOrchestrator(BaseCodingAgent):
     agent_id = "devin_ai"
     display_name = "Devin AI (Cognition Session Sandbox)"
     container_type = "devin_cloud_session"
+    requires_local_clone = False
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("DEVIN_API_KEY", "")

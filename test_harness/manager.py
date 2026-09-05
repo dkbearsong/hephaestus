@@ -12,6 +12,9 @@ from test_harness.webhook.live_template import LiveWebhookTemplate
 from test_harness.webhook.validator import WebhookPayloadValidator
 from test_harness.data.loader import TestDataLoader
 from test_harness.reporters.file_logger import TestExecutionLogger
+from test_harness.workspace_orchestrator.tester import WorkspaceOrchestratorTester
+from test_harness.workspace_orchestrator.jira_runner import JiraTicketWorkspaceRunner
+from test_harness.workspace_orchestrator.webhook_tester import IncomingWebhookTester
 
 logger = logging.getLogger("hephaestus.test_harness")
 
@@ -37,6 +40,9 @@ class TestHarness(BaseTestComponent):
         self.payload_validator = WebhookPayloadValidator()
         self.data_loader = TestDataLoader()
         self.logger = TestExecutionLogger()
+        self.workspace_orchestrator_tester = WorkspaceOrchestratorTester()
+        self.jira_ticket_runner = JiraTicketWorkspaceRunner()
+        self.incoming_webhook_tester = IncomingWebhookTester()
 
         self._active_ai_component: Optional[BaseTestComponent] = None
         self.status = ComponentStatus.ACTIVE

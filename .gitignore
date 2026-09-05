@@ -2,14 +2,16 @@
 .venv/
 node_modules/
 __pycache__/
-*.pyc
-.env
 sandboxes/
 staging/
 dist/
+outputs/
 tests/test_logs/
 .github/
 
 # Files
 .DS_Store
 *.log
+*.pyc
+.env
+prep_summary.json

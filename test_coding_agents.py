@@ -30,6 +30,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from test_harness.coding_agents.tester import coding_agents_tester, ALL_CODING_AGENTS
+from test_harness.workspace_orchestrator import (
+    jira_ticket_workspace_runner,
+    workspace_orchestrator_tester,
+    incoming_webhook_tester
+)
 from backend.coding_agents.orchestrator import coding_agent_orchestrator
 
 def run_interactive():
@@ -41,10 +46,12 @@ def run_interactive():
     print("  2. Test a specific coding agent")
     print("  3. Run MANUAL test with a webhook from Jira")
     print("  4. List all supported coding agents & container environments")
-    print("  5. Exit")
+    print("  5. Run Jira Test Ticket with WorkspaceOrchestrator (Scaffolding, Provider Prep & Handoff)")
+    print("  6. Receive Incoming Webhook and Test WorkspaceOrchestrator From There")
+    print("  7. Exit")
     print("-" * 75)
 
-    choice = input("Enter choice (1-5): ").strip()
+    choice = input("Enter choice (1-7): ").strip()
     if choice == "1":
         summary = coding_agents_tester.test_all_agents(verbose=True)
         sys.exit(0 if summary["all_passed"] else 1)
@@ -90,6 +97,42 @@ def run_interactive():
         for a in agents:
             print(f"  • {a['display_name']} ({a['agent_id']}) -> Container: {a['container_type']}")
         sys.exit(0)
+    elif choice == "5":
+        print("\n--- Jira Ticket WorkspaceOrchestrator Test ---")
+        ticket = input("Enter Jira Ticket Key [default: JIRA-ORCH-101]: ").strip() or "JIRA-ORCH-101"
+        mode = input("Select Mode: 1=PROMPT_NEW, 2=PROMPT [default: 1]: ").strip()
+        mode_val = "PROMPT" if mode == "2" else "PROMPT_NEW"
+        plat = input("Select Platform: 1=GOOGLE_JULES, 2=CODEX_CLOUD, 3=LOCAL_CONTAINER [default: 3]: ").strip()
+        plat_map = {"1": "GOOGLE_JULES", "2": "CODEX_CLOUD", "3": "LOCAL_CONTAINER"}
+        plat_val = plat_map.get(plat, "LOCAL_CONTAINER")
+        live = input("Fetch from live Jira Cloud API? (y/N): ").strip().lower() == "y"
+        res = jira_ticket_workspace_runner.run_and_verify_ticket(
+            ticket_key=ticket,
+            mode=mode_val,
+            target_platform=plat_val,
+            use_live_jira=live,
+            cleanup_after=False,
+            verbose=True
+        )
+        sys.exit(0 if res.get("success") else 1)
+    elif choice == "6":
+        print("\n--- Incoming Webhook WorkspaceOrchestrator Test ---")
+        ticket = input("Enter Jira Ticket Key [default: WEBHOOK-TEST-505]: ").strip() or "WEBHOOK-TEST-505"
+        mode = input("Select Mode: 1=PROMPT_NEW, 2=PROMPT [default: 1]: ").strip()
+        mode_val = "PROMPT" if mode == "2" else "PROMPT_NEW"
+        plat = input("Select Platform: 1=GOOGLE_JULES, 2=CODEX_CLOUD, 3=LOCAL_CONTAINER [default: 3]: ").strip()
+        plat_map = {"1": "GOOGLE_JULES", "2": "CODEX_CLOUD", "3": "LOCAL_CONTAINER"}
+        plat_val = plat_map.get(plat, "LOCAL_CONTAINER")
+        url = input("Optional HTTP Webhook URL (press Enter for in-process TestClient): ").strip() or None
+
+        res = incoming_webhook_tester.receive_and_test_webhook(
+            ticket_key=ticket,
+            mode=mode_val,
+            target_platform=plat_val,
+            webhook_url=url,
+            verbose=True
+        )
+        sys.exit(0 if res.get("success") else 1)
     else:
         print("Exiting.")
         sys.exit(0)
@@ -142,12 +185,61 @@ def main():
         action="store_true",
         help="List all supported coding agents and their container environments"
     )
+    parser.add_argument(
+        "--jira-workspace-ticket",
+        type=str,
+        default=None,
+        help="Run WorkspaceOrchestrator test for a specific Jira ticket (e.g. PROJ-101)"
+    )
+    parser.add_argument(
+        "--workspace-mode",
+        choices=["PROMPT_NEW", "PROMPT"],
+        default="PROMPT_NEW",
+        help="Workspace mode for --jira-workspace-ticket"
+    )
+    parser.add_argument(
+        "--workspace-platform",
+        choices=["GOOGLE_JULES", "CODEX_CLOUD", "LOCAL_CONTAINER"],
+        default="LOCAL_CONTAINER",
+        help="Target platform for --jira-workspace-ticket"
+    )
+    parser.add_argument(
+        "--webhook-orchestrator",
+        action="store_true",
+        help="Receive an incoming signed Jira webhook and test WorkspaceOrchestrator from there"
+    )
 
     args = parser.parse_args()
 
     if args.interactive:
         run_interactive()
         return
+
+    if args.webhook_orchestrator:
+        res = incoming_webhook_tester.receive_and_test_webhook(
+            ticket_key=args.jira_workspace_ticket or "WEBHOOK-TEST-505",
+            mode=args.workspace_mode,
+            target_platform=args.workspace_platform,
+            prompt=args.comment if args.comment != parser.get_default("comment") else None,
+            webhook_url=args.url,
+            verbose=True
+        )
+        sys.exit(0 if res.get("success") else 1)
+
+    if args.all_workspace_platforms:
+        res = workspace_orchestrator_tester.test_all_platforms(verbose=True)
+        sys.exit(0 if res.get("all_passed") else 1)
+
+    if args.jira_workspace_ticket:
+        res = jira_ticket_workspace_runner.run_and_verify_ticket(
+            ticket_key=args.jira_workspace_ticket,
+            mode=args.workspace_mode,
+            target_platform=args.workspace_platform,
+            comment_text=args.comment if args.comment != parser.get_default("comment") else None,
+            cleanup_after=False,
+            verbose=True
+        )
+        sys.exit(0 if res.get("success") else 1)
 
     if args.list_agents:
         agents = coding_agent_orchestrator.list_supported_agents()

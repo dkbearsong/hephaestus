@@ -31,7 +31,7 @@ class JiraService:
 
     def remove_trigger_label(self, issue_key: str, label_to_remove: Optional[str] = None) -> bool:
         """
-        Removes the trigger label (e.g. 'ai-code') so subsequent updates do not re-fire the webhook.
+        Removes the trigger label (e.g. 'run_ai_orchestrator') so subsequent updates do not re-fire the webhook.
         """
         target_label = label_to_remove or preferences.jira.trigger_label
         if not self.jira:
@@ -126,6 +126,22 @@ class JiraService:
             return True
         except Exception as e:
             logger.error("Error updating Jira issue %s: %s", issue_key, e)
+            return False
+
+    def add_comment(self, issue_key: str, comment_text: str) -> bool:
+        """
+        Adds a comment to the specified Jira issue (e.g. for blocker notifications).
+        """
+        if not self.jira:
+            logger.info("[MOCK] Added comment to Jira issue %s: %s", issue_key, comment_text[:80])
+            return True
+
+        try:
+            self.jira.add_comment(issue_key, comment_text)
+            logger.info("Added comment to Jira issue %s", issue_key)
+            return True
+        except Exception as e:
+            logger.error("Error adding comment to Jira issue %s: %s", issue_key, e)
             return False
 
 jira_service = JiraService()

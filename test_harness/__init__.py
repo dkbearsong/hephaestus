@@ -6,6 +6,14 @@ from test_harness.coding_agents.tester import CodingAgentsTester, coding_agents_
 from test_harness.webhook import WebhookWatcherClient, LiveWebhookTemplate, WebhookPayloadValidator
 from test_harness.data import TestDataLoader, TestCaseGenerator
 from test_harness.reporters import TestExecutionLogger
+from test_harness.workspace_orchestrator import (
+    WorkspaceOrchestratorTester,
+    workspace_orchestrator_tester,
+    JiraTicketWorkspaceRunner,
+    jira_ticket_workspace_runner,
+    IncomingWebhookTester,
+    incoming_webhook_tester
+)
 
 __all__ = [
     "BaseTestComponent",
@@ -25,4 +33,10 @@ __all__ = [
     "TestDataLoader",
     "TestCaseGenerator",
     "TestExecutionLogger",
+    "WorkspaceOrchestratorTester",
+    "workspace_orchestrator_tester",
+    "JiraTicketWorkspaceRunner",
+    "jira_ticket_workspace_runner",
+    "IncomingWebhookTester",
+    "incoming_webhook_tester",
 ]

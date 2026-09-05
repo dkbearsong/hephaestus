@@ -328,6 +328,8 @@ class LLMProviderClient:
                 payload["messages"] = self.flatten_messages_for_plain_chat(messages)
                 resp = client.post(url, headers=headers, json=payload)
 
+            if resp.status_code >= 400:
+                logger.warning("[%s] API returned HTTP %d: %s", provider, resp.status_code, resp.text[:300])
             resp.raise_for_status()
             data = resp.json()
 
@@ -535,9 +537,44 @@ class LLMProviderClient:
         # Check if user prompt mentions date, time, postgres, or test runner
         prompt_text = " ".join(str(m.get("content", "")) for m in messages).lower()
 
+        tool_names = set()
+        for t in (tools or []):
+            if isinstance(t, dict):
+                if "function" in t and isinstance(t["function"], dict):
+                    tool_names.add(t["function"].get("name"))
+                elif "name" in t:
+                    tool_names.add(t.get("name"))
+            elif hasattr(t, "name"):
+                tool_names.add(getattr(t, "name"))
+
+        # Check for blocker condition
+        if "block_task" in prompt_text or "blocked:" in prompt_text:
+            return LLMResponse(
+                content=f"[{provider}:{model}] Blocker condition detected in preparations instructions.",
+                tool_calls=[ToolCall(name="complete_preparation", args={
+                    "status": "BLOCKED",
+                    "detected_commands": {},
+                    "files_modified": [],
+                    "blocker_reason": "Preparation detected unresolved blocker in preparations instructions"
+                })] if "complete_preparation" in tool_names else [],
+                finish_reason="stop",
+                raw_response={"simulated": True, "provider": provider, "model": model},
+                is_end_of_token=True
+            )
+
         if not has_tool_result:
-            # First turn: if prompt asks for date/time or specific tool, call that tool!
-            if "date" in prompt_text or "time" in prompt_text or "now" in prompt_text or "today" in prompt_text:
+            # Check for MCP run_command tool if tests or verification are requested
+            if "run_command" in tool_names and ("test" in prompt_text or "pytest" in prompt_text or "verify" in prompt_text or "check" in prompt_text):
+                return LLMResponse(
+                    content=f"[{provider}:{model}] Executing required tests in workspace via MCP run_command.",
+                    tool_calls=[ToolCall(name="run_command", args={"command": "pytest"})],
+                    finish_reason="tool_calls",
+                    raw_response={"simulated": True, "provider": provider, "model": model},
+                    is_end_of_token=False
+                )
+
+            # First turn: if prompt asks for date/time or specific tool and it's available, call that tool!
+            if ("get_current_datetime" in tool_names or not tool_names) and ("date" in prompt_text or "time" in prompt_text or "now" in prompt_text or "today" in prompt_text):
                 mode = "date" if "date" in prompt_text and "time" not in prompt_text else (
                     "time" if "time" in prompt_text and "date" not in prompt_text else "both"
                 )
@@ -548,7 +585,7 @@ class LLMProviderClient:
                     raw_response={"simulated": True, "provider": provider, "model": model},
                     is_end_of_token=False
                 )
-            elif "table" in prompt_text or "postgres" in prompt_text or "database" in prompt_text:
+            elif ("list_tables" in tool_names or not tool_names) and ("table" in prompt_text or "postgres" in prompt_text or "database" in prompt_text):
                 return LLMResponse(
                     content=f"[{provider}:{model}] Inspecting database tables for preparations.",
                     tool_calls=[ToolCall(name="list_tables", args={})],
@@ -556,7 +593,7 @@ class LLMProviderClient:
                     raw_response={"simulated": True, "provider": provider, "model": model},
                     is_end_of_token=False
                 )
-            elif "test" in prompt_text or "pytest" in prompt_text:
+            elif "run_pytest" in tool_names and ("test" in prompt_text or "pytest" in prompt_text):
                 return LLMResponse(
                     content=f"[{provider}:{model}] Running test verification before container spin up.",
                     tool_calls=[ToolCall(name="run_pytest", args={"test_path": "tests"})],
@@ -575,6 +612,55 @@ class LLMProviderClient:
                 )
         else:
             # Second turn (after receiving tool response): conclude and emit end-of-token
+            tool_names = set()
+            for t in (tools or []):
+                if isinstance(t, dict):
+                    if "function" in t and isinstance(t["function"], dict):
+                        tool_names.add(t["function"].get("name"))
+                    elif "name" in t:
+                        tool_names.add(t.get("name"))
+                elif hasattr(t, "name"):
+                    tool_names.add(getattr(t, "name"))
+
+            tool_msgs = [m for m in messages if m.get("role") == "tool" or "[tool result" in str(m.get("content", "")).lower()]
+            last_tool_msg = tool_msgs[-1] if tool_msgs else {}
+            last_tool_name = last_tool_msg.get("name", "")
+            tool_content = last_tool_msg.get("content", "")
+
+            # If previous tool was get_current_datetime and we have output file writer, chain to it!
+            if last_tool_name == "get_current_datetime" and ("write_datetime_output_file" in tool_names or "write_output_file" in tool_names):
+                date_val = "2026-09-04 14-17-05"
+                try:
+                    parsed_dt = json.loads(tool_content)
+                    if isinstance(parsed_dt, dict):
+                        date_val = parsed_dt.get("datetime") or parsed_dt.get("iso") or parsed_dt.get("date") or date_val
+                except Exception:
+                    pass
+
+                target_tool = "write_datetime_output_file" if "write_datetime_output_file" in tool_names else "write_output_file"
+                args = {"date_time_str": date_val} if target_tool == "write_datetime_output_file" else {"filename": f"{date_val}.txt", "content": f"Timestamp: {date_val}"}
+
+                return LLMResponse(
+                    content=f"[{provider}:{model}] Pulled date and time '{date_val}'. Saving to outputs directory using {target_tool}.",
+                    tool_calls=[ToolCall(name=target_tool, args=args)],
+                    finish_reason="tool_calls",
+                    raw_response={"simulated": True, "provider": provider, "model": model},
+                    is_end_of_token=False
+                )
+
+            if "complete_preparation" in tool_names:
+                return LLMResponse(
+                    content=f"[{provider}:{model}] Workspace tests and preparations verified. Completing preparation.",
+                    tool_calls=[ToolCall(name="complete_preparation", args={
+                        "status": "READY",
+                        "detected_commands": {"test": "pytest", "build": None, "lint": None},
+                        "files_modified": []
+                    })],
+                    finish_reason="tool_calls",
+                    raw_response={"simulated": True, "provider": provider, "model": model},
+                    is_end_of_token=False
+                )
+
             tool_msgs = [m for m in messages if m.get("role") == "tool" or "[tool result" in str(m.get("content", "")).lower()]
             tool_content = tool_msgs[-1].get("content", "") if tool_msgs else "Tool executed"
             return LLMResponse(
