@@ -1,8 +1,9 @@
 version: 1
+ticket_key: WH-EXIST-202
 platform: google_jules
 execution:
-  enforce_clean_git: true
-  auto_test: true
+  enforce_zero_uncommitted_files: true
+  auto_execute_tests: true
 hooks:
-  build: null
   test: pytest
+  build: null
