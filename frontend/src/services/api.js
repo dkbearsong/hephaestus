@@ -9,6 +9,8 @@ export const api = {
   getRun: (id) => axios.get(`${API_BASE}/runs/${id}`).then(r => r.data),
   getRunEvents: (id) => axios.get(`${API_BASE}/runs/${id}/events`).then(r => r.data),
   getStats: () => axios.get(`${API_BASE}/stats`).then(r => r.data),
+  approveRun: (id) => axios.post(`${API_BASE}/runs/${id}/approve`).then(r => r.data),
+  abortRun: (id) => axios.post(`${API_BASE}/runs/${id}/abort`).then(r => r.data),
 
   // Projects
   getProjects: () => axios.get(`${API_BASE}/projects`).then(r => r.data),

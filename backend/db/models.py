@@ -13,7 +13,7 @@ class Run(Base):
     jira_key = Column(String(32), index=True)
     mode = Column(Enum("PROMPT", "PROMPT_NEW", name="run_mode_enum"))
     target_platform = Column(Enum("GOOGLE_JULES", "CODEX_CLOUD", "LOCAL_CONTAINER", name="target_platform_enum"))
-    status = Column(Enum("QUEUED", "PREPARING", "CODING", "AWAITING_CI", "COMPLETED", "FAILED", name="run_status_enum"), default="QUEUED")
+    status = Column(Enum("QUEUED", "PREPARING", "CODING", "AWAITING_PERMISSION", "AWAITING_CI", "COMPLETED", "FAILED", name="run_status_enum"), default="QUEUED")
     branch_name = Column(String(255), nullable=True)
     pr_url = Column(String, nullable=True)
     prep_summary = Column(JSONB, nullable=True)
