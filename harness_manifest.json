@@ -1,0 +1,20 @@
+{
+  "ticket_key": "WH-EXIST-202",
+  "mode": "PROMPT",
+  "target_platform": "GOOGLE_JULES",
+  "repo_coordinates": {
+    "repo_url": "https://github.com/dkbearsong/hephaestus.git",
+    "branch": "hephaestus/wh-exist-202-task_55f308b2",
+    "commit_sha": "c9c486b4d3cbc91d7033b67144fbeb8f650d650f"
+  },
+  "prompt_location": {
+    "prompt_file": "/Users/dbearsong/Documents/projects/python/hephaestus/staging/task_adb81704/prompt.md",
+    "preparations_file": "/Users/dbearsong/Documents/projects/python/hephaestus/staging/task_adb81704/preparations.md"
+  },
+  "detected_commands": {
+    "build": null,
+    "test": "pytest",
+    "lint": null
+  },
+  "created_at": "2026-09-08T14:12:05Z"
+}

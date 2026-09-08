@@ -1,0 +1,48 @@
+{
+  "ticket_key": "WH-EXIST-202",
+  "mode": "PROMPT",
+  "target_platform": "GOOGLE_JULES",
+  "working_directory": "/Users/dbearsong/Documents/projects/python/hephaestus/sandboxes/workspaces/WH-EXIST-202_1788876722",
+  "branch_name": "hephaestus/wh-exist-202-task_55f308b2",
+  "repo_url": "https://github.com/dkbearsong/hephaestus.git",
+  "ready_for_execution": true,
+  "cloned": false,
+  "flags": {},
+  "prep_summary": {
+    "status": "READY",
+    "working_directory": "/Users/dbearsong/Documents/projects/python/hephaestus/sandboxes/workspaces/WH-EXIST-202_1788876722",
+    "branch_name": "hephaestus/wh-exist-202-task_55f308b2",
+    "detected_commands": {
+      "build": null,
+      "test": "pytest",
+      "lint": null
+    },
+    "files_modified": [
+      "controller.py",
+      "requirements.txt",
+      "run_service.sh",
+      "test_controller.py"
+    ],
+    "blocker_reason": null
+  },
+  "provider_config": {
+    "platform": "GOOGLE_JULES",
+    "rules_applied": [
+      "Enforce zero uncommitted files",
+      "Generate/update .jules/ configuration",
+      "Set build/test hooks into standard repo configs"
+    ],
+    "manifest_files": [
+      ".jules/config.yaml",
+      "pytest.ini"
+    ],
+    "environment_variables": {},
+    "mount_points": {},
+    "entry_points_verified": [],
+    "hooks_configured": {
+      "test": "pytest"
+    }
+  },
+  "created_at": "2026-09-08T14:12:05Z",
+  "manifest_path": "/Users/dbearsong/Documents/projects/python/hephaestus/sandboxes/workspaces/WH-EXIST-202_1788876722/harness_manifest.json"
+}
