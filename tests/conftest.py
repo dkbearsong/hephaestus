@@ -1,3 +1,25 @@
+import os
+import pytest
+from unittest.mock import patch, MagicMock
+
+# Mock database entirely for tests
+mock_session = MagicMock()
+mock_project = MagicMock()
+mock_project.key = "PYTEST"
+mock_project.branch_name = "test_branch"
+mock_project.repo_url = "https://github.com/mock/repo"
+mock_project.base_image = "python:3.12-slim"
+mock_project.system_prompt_additions = ""
+mock_session.query.return_value.filter.return_value.first.return_value = mock_project
+
+# Prevent connection errors
+patch("backend.database.connection.create_engine").start()
+patch("sqlalchemy.create_engine").start()
+
+mock_SessionLocal = MagicMock(return_value=mock_session)
+patch("backend.database.connection.SessionLocal", mock_SessionLocal).start()
+patch("backend.workflows.task_graph.SessionLocal", mock_SessionLocal).start()
+
 import sys
 from pathlib import Path
 import pytest
