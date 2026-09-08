@@ -1,0 +1,8 @@
+version: 1
+platform: google_jules
+execution:
+  enforce_clean_git: true
+  auto_test: true
+hooks:
+  build: null
+  test: pytest
