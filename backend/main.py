@@ -27,6 +27,8 @@ webhook_watcher.pipeline_engine = workflow_engine
 
 app = FastAPI(title="Hephaestus Coding Agent Harness Backend", version="2.0.0")
 
+from backend.api.routes.runs import router as runs_router
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,6 +36,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(runs_router)
+
 
 class WebhookPayload(BaseModel):
     comment_text: str

@@ -5,13 +5,14 @@ import ReviewQueue from './components/ReviewQueue';
 import QueueHistoryView from './components/QueueHistoryView';
 import ProjectDetailsView from './components/ProjectDetailsView';
 import AgentChatView from './components/AgentChatView';
+import RunDashboard from './components/RunDashboard';
 import WorkLogModal from './components/WorkLogModal';
 import MergeConfirmModal from './components/MergeConfirmModal';
 import { api, connectWebSocket } from './services/api';
 
 export default function App() {
   // Navigation & View State
-  const [currentView, setCurrentView] = useState('ticket-review'); // 'ticket-review' | 'queue-history' | 'project-details' | 'ticket-chat'
+  const [currentView, setCurrentView] = useState('runs-dashboard'); // 'ticket-review' | 'queue-history' | 'project-details' | 'ticket-chat'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Selected Entities
@@ -186,6 +187,10 @@ export default function App() {
 
         {/* Dynamic Center Panel */}
         <main className="flex-1 flex flex-col overflow-hidden bg-slate-950">
+                    {currentView === 'runs-dashboard' && (
+            <RunDashboard />
+          )}
+
           {currentView === 'ticket-review' && (
             <ReviewQueue
               ticket={activeTicketData.ticket}

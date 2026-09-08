@@ -3,6 +3,13 @@ import axios from 'axios';
 const API_BASE = '/api';
 
 export const api = {
+
+  // Run Dashboards
+  getRuns: () => axios.get(`${API_BASE}/runs`).then(r => r.data),
+  getRun: (id) => axios.get(`${API_BASE}/runs/${id}`).then(r => r.data),
+  getRunEvents: (id) => axios.get(`${API_BASE}/runs/${id}/events`).then(r => r.data),
+  getStats: () => axios.get(`${API_BASE}/stats`).then(r => r.data),
+
   // Projects
   getProjects: () => axios.get(`${API_BASE}/projects`).then(r => r.data),
   getProject: (id) => axios.get(`${API_BASE}/projects/${id}`).then(r => r.data),
