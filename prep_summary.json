@@ -1,0 +1,17 @@
+{
+  "status": "READY",
+  "working_directory": "/Users/dbearsong/Documents/projects/python/hephaestus/sandboxes/workspaces/WH-EXIST-202_1788876722",
+  "branch_name": "hephaestus/wh-exist-202-task_55f308b2",
+  "detected_commands": {
+    "build": null,
+    "test": "pytest",
+    "lint": null
+  },
+  "files_modified": [
+    "controller.py",
+    "requirements.txt",
+    "run_service.sh",
+    "test_controller.py"
+  ],
+  "blocker_reason": null
+}
