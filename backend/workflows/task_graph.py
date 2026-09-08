@@ -1,6 +1,8 @@
 import os
 import uuid
 import logging
+import asyncio
+from backend.db.service import create_run, update_run_status, append_event
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from backend.config import preferences

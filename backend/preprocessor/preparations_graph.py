@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from backend.db.service import append_event
 from pathlib import Path
 from typing import Dict, Any, List, Optional, TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -122,6 +123,32 @@ class PreparationsGraphRunner:
                     res = {"error": str(ex)}
                     res_str = json.dumps(res)
 
+
+                # Append telemetry event safely
+                try:
+                    import threading
+                    import asyncio
+                    def _track_event():
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                        try:
+                            loop.run_until_complete(append_event(
+                                run_id=state.get("run_id"),
+                                event_type="MCP_TOOL_CALL",
+                                payload={
+                                    "func_name": func_name,
+                                    "args": args,
+                                    "result": res_str
+                                },
+                                level="INFO"
+                            ))
+                        except Exception:
+                            pass
+                        finally:
+                            loop.close()
+                    threading.Thread(target=_track_event, daemon=True).start()
+                except Exception:
+                    pass
                 executed.append({
                     "id": call_id,
                     "name": func_name,
