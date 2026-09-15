@@ -598,7 +598,7 @@ class WebhookWatcher:
                     params = sig.parameters
                     has_var_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
 
-                    target_agent = formatted.metadata.get("target_agent")
+                    target_agent = formatted.agent_override or formatted.metadata.get("target_agent")
                     if target_agent is not None and ("target_agent" in params or has_var_kwargs):
                         kwargs["target_agent"] = target_agent
 

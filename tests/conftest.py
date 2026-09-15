@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 mock_session = MagicMock()
 mock_project = MagicMock()
 mock_project.key = "PYTEST"
-mock_project.branch_name = "test_branch"
+mock_project.branch_name = None
 mock_project.repo_url = "https://github.com/mock/repo"
 mock_project.base_image = "python:3.12-slim"
 mock_project.system_prompt_additions = ""
@@ -41,6 +41,12 @@ from test_harness.fixtures import (
     test_logger,
     all_test_cases,
 )
+
+@pytest.fixture(autouse=True)
+def reset_mock_db_state():
+    mock_project.branch_name = None
+    yield
+    mock_project.branch_name = None
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_logging(test_harness):

@@ -32,9 +32,17 @@ class QualifierParser:
         if match:
             agent_name = match.group("agent_name")
             cleaned = comment_body[:match.start()] + comment_body[match.end():]
+            norm_agent = agent_name.lower().strip()
+            if norm_agent in ("google_jules", "jules"):
+                platform = "GOOGLE_JULES"
+            elif norm_agent in ("openai_codex_cloud", "codex_cloud", "codex"):
+                platform = "CODEX_CLOUD"
+            else:
+                platform = "LOCAL_CONTAINER"
+
             return {
                 "agent_override": agent_name,
-                "target_platform": "LOCAL_CONTAINER",
+                "target_platform": platform,
                 "cleaned_comment": cleaned.strip()
             }
 

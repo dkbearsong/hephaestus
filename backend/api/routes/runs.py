@@ -39,6 +39,7 @@ async def list_runs(
                 "jira_key": r.jira_key,
                 "status": r.status,
                 "target_platform": r.target_platform,
+                "agent_name": (r.metrics.get("agent_override") or r.metrics.get("agent_name")) if (r.metrics and isinstance(r.metrics, dict)) else None,
                 "created_at": r.created_at
             } for r in runs
         ]
