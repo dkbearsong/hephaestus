@@ -23,7 +23,26 @@ class WebhookPayloadValidator(BaseTestComponent):
         assert isinstance(payload.in_memory_comment, str), "in_memory_comment must be a string"
         assert isinstance(payload.raw_comment, str), "raw_comment must be a string"
         assert isinstance(payload.metadata, dict), "metadata must be a dictionary"
+        assert isinstance(payload.additional_values, dict), "additional_values must be a dictionary"
+        assert isinstance(payload.has_additional_values, bool), "has_additional_values must be a boolean"
+        assert isinstance(payload.additional_values_valid, bool), "additional_values_valid must be a boolean"
         assert payload.prompt_tag in ("prompt", "prompt-new", None), f"Invalid prompt_tag: {payload.prompt_tag}"
+        return True
+
+    def validate_additional_values_extraction(
+        self,
+        payload: FormattedWebhookPayload,
+        expected_add_vals: Optional[dict] = None,
+        expected_valid: bool = True
+    ) -> bool:
+        """Verifies <|additional values|> tag extraction and validity status."""
+        assert payload.additional_values_valid == expected_valid, (
+            f"additional_values_valid mismatch: expected {expected_valid}, got {payload.additional_values_valid}"
+        )
+        if expected_add_vals is not None and expected_valid:
+            assert payload.additional_values == expected_add_vals, (
+                f"additional_values mismatch: expected {expected_add_vals}, got {payload.additional_values}"
+            )
         return True
 
     def validate_tag_identification(

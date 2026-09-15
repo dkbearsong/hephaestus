@@ -96,8 +96,8 @@ class HephaestusWorkflowEngine:
         task_id = f"task_{uuid.uuid4().hex[:8]}"
         logger.info("Processing incoming webhook for issue %s (Task ID: %s)", jira_issue_key, task_id)
 
-        # Step 1: Prompt extraction (includes optional <|preparations|>)
-        is_prompt, prompt_meta = self.prompt_extractor.extract_prompt(comment_text, task_id)
+        # Step 1: Prompt extraction (includes optional <|additional values|>)
+        is_prompt, prompt_meta = self.prompt_extractor.extract_prompt(comment_text, task_id, jira_issue_key=jira_issue_key)
         if not is_prompt:
             # Check if comment_text was already stripped of prompt prefix by the webhook watcher
             if comment_text and comment_text.strip():
@@ -112,6 +112,8 @@ class HephaestusWorkflowEngine:
                 prompt_meta = {
                     "task_id": task_id,
                     "is_new_project": bool(is_new_project),
+                    "flags": flags or {},
+                    "has_flags": bool(flags),
                     "raw_text": comment_text,
                     "cleaned_prompt": comment_text,
                     "prompt_instructions": prompt_instructions,

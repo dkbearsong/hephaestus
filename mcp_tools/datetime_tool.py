@@ -2,7 +2,13 @@
 Date and Time MCP Tool for Hephaestus
 Provides current date, current time, or both to coding and preparation agents.
 """
-from fastmcp import FastMCP
+try:
+    from mcp.server.fastmcp import FastMCP
+except (ImportError, ModuleNotFoundError):
+    try:
+        from fastmcp import FastMCP
+    except (ImportError, ModuleNotFoundError):
+        from mcp.server.mcpserver import MCPServer as FastMCP
 from datetime import datetime, timezone
 import zoneinfo
 from typing import Dict, Any, Optional

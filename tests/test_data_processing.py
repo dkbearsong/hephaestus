@@ -367,3 +367,71 @@ class TestDataProcessingStep:
         assert call["jira_issue_key"] == "DB-55"
         assert call["comment_text"] == "Optimize database indices."
         assert call["preparations"] == "Run VACUUM ANALYZE before building indices."
+
+    def test_extract_additional_values_valid_json(self, validator):
+        """
+        Verifies extraction of <|prompt|> and <|additional values|> JSON object.
+        """
+        comment = (
+            "<|prompt|> Fix payment retry queue.\n"
+            "<|additional values|>\n"
+            "{\n"
+            '  "files": ["src/payment.py", "tests/test_payment.py"],\n'
+            '  "preparations": "Start redis container",\n'
+            '  "flags": {"clone": false},\n'
+            '  "is_new_project": true\n'
+            "}\n"
+            "</|additional values|>"
+        )
+        payload = WebhookPayloadFormatter.format_payload({
+            "comment_text": comment,
+            "jira_issue_key": "ADDVAL-101"
+        })
+
+        assert payload.prompt_tag == "prompt-new"
+        assert payload.is_ai_trigger is True
+        assert payload.has_additional_values is True
+        assert payload.additional_values_valid is True
+        assert payload.files == ["src/payment.py", "tests/test_payment.py"]
+        assert payload.preparations == "Start redis container"
+        assert payload.flags == {"clone": False}
+        assert payload.in_memory_comment == "Fix payment retry queue."
+        validator.validate_additional_values_extraction(
+            payload,
+            expected_add_vals={
+                "files": ["src/payment.py", "tests/test_payment.py"],
+                "preparations": "Start redis container",
+                "flags": {"clone": False},
+                "is_new_project": True
+            },
+            expected_valid=True
+        )
+
+    def test_extract_additional_values_invalid_json_posts_jira_comment(self, monkeypatch):
+        """
+        Verifies that when <|additional values|> does not contain a valid JSON object,
+        the program posts a comment to the incoming Jira ticket informing the user,
+        and sets is_ai_trigger to False.
+        """
+        jira_comments = []
+        from backend.jira_service.client import jira_service
+        monkeypatch.setattr(jira_service, "add_comment", lambda key, comment: jira_comments.append((key, comment)))
+
+        comment = (
+            "<|prompt|> Fix payment retry queue.\n"
+            "<|additional values|>\n"
+            "Invalid JSON structure here\n"
+            "</|additional values|>"
+        )
+        payload = WebhookPayloadFormatter.format_payload({
+            "comment_text": comment,
+            "jira_issue_key": "ADDVAL-ERR"
+        })
+
+        assert payload.has_additional_values is True
+        assert payload.additional_values_valid is False
+        assert payload.is_ai_trigger is False
+        assert len(jira_comments) == 1
+        ticket_key, comment_text = jira_comments[0]
+        assert ticket_key == "ADDVAL-ERR"
+        assert "did not contain a valid JSON object" in comment_text

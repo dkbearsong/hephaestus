@@ -2,7 +2,13 @@
 Test Runner MCP Tool for Hephaestus
 Enables the coding harness agent to run test commands and report results.
 """
-from fastmcp import FastMCP
+try:
+    from mcp.server.fastmcp import FastMCP
+except (ImportError, ModuleNotFoundError):
+    try:
+        from fastmcp import FastMCP
+    except (ImportError, ModuleNotFoundError):
+        from mcp.server.mcpserver import MCPServer as FastMCP
 import subprocess
 import os
 

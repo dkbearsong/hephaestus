@@ -132,40 +132,34 @@ class PromptExtractor:
 
         return raw_paths, remaining.strip()
 
-    def extract_prompt(self, comment_text: str, task_id: str) -> Tuple[bool, Dict[str, Any]]:
+    def extract_prompt(self, comment_text: str, task_id: str, jira_issue_key: str = "") -> Tuple[bool, Dict[str, Any]]:
         """
         Monitors incoming comment or text.
         Extracts:
-          - Optional <|preparations|> tag (saved to staging/{task_id}/preparations.md)
-          - Prompt trigger tag (<|prompt|> or <|prompt-new|>)
-          - Files referenced in <|files|>
-          - Saves clean prompt to staging/{task_id}/prompt.md
+          - <|prompt|> instructions
+          - <|additional values|> JSON object (extracts optional files, preparations, flags, is_new_project)
+          - Saves clean prompt to staging/{task_id}/prompt.md (and preparations to preparations.md)
           - Returns (is_prompt, metadata)
         """
-        # Step 1: Extract optional flags (YAML format for deterministic settings)
-        flags, text_without_flags = self.extract_flags(comment_text)
+        from backend.watcher.webhook_watcher import WebhookPayloadFormatter
 
-        # Step 2: Extract optional preparations instructions
-        preparations, text_without_prep = self.extract_preparations(text_without_flags)
+        (
+            tag_type,
+            preparations,
+            files,
+            flags,
+            in_memory_copy,
+            prompt_instructions,
+            add_vals,
+            has_add_vals,
+            add_vals_valid
+        ) = WebhookPayloadFormatter.extract_tags_and_content(comment_text, jira_issue_key=jira_issue_key)
 
-        trimmed = text_without_prep.strip()
-        is_new_project = False
-        raw_prompt = ""
-
-        if trimmed.startswith(self.new_proj_prefix):
-            is_new_project = True
-            raw_prompt = trimmed[len(self.new_proj_prefix):].strip()
-        elif trimmed.startswith(self.update_prefix):
-            is_new_project = False
-            raw_prompt = trimmed[len(self.update_prefix):].strip()
-        else:
-            # Not an AI prompt trigger
+        if not tag_type or not add_vals_valid:
             return False, {}
 
-        # Extract file paths and isolate pure prompt instructions
-        files, prompt_instructions = self.extract_files(raw_prompt)
+        is_new_project = (tag_type == "prompt-new") or bool(add_vals.get("is_new_project") or add_vals.get("new_project"))
 
-        # Write prompt and preparations to markdown file(s) via MDFileWriter (prompt terminates at <|files|>)
         from backend.preprocessor.md_file_writer import md_file_writer
         writer_res = md_file_writer.write_prompt_and_preparations(
             task_id=task_id,
@@ -179,8 +173,11 @@ class PromptExtractor:
             "flags": flags,
             "has_flags": len(flags) > 0,
             "raw_text": comment_text,
-            "cleaned_prompt": raw_prompt,
+            "cleaned_prompt": prompt_instructions,
             "prompt_instructions": prompt_instructions,
+            "additional_values": add_vals,
+            "has_additional_values": has_add_vals,
+            "additional_values_valid": add_vals_valid,
             "files": files,
             "has_files": len(files) > 0,
             "preparations": preparations,
