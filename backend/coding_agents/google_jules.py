@@ -16,6 +16,14 @@ from backend.config import GEMINI_API_KEY, JULES_API_KEY
 
 logger = logging.getLogger("hephaestus.coding_agents.google_jules")
 
+
+class JulesBranchPreflightError(Exception):
+    """
+    Raised when the target branch cannot be verified (or created from the base branch)
+    on GitHub before a Google Jules session is dispatched.
+    """
+    pass
+
 class GoogleJulesOrchestrator(BaseCodingAgent):
     agent_id = "google_jules"
     display_name = "Google Jules (Cloud Workspace)"
@@ -92,6 +100,49 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
         owner, repo_name = repo_match.group(1), repo_match.group(2)
         source_id = f"sources/github/{owner}/{repo_name}"
         branch = container_env.branch_name or "main"
+
+        # Branch preflight: Jules clones an existing GitHub ref, so the target branch
+        # must exist before session creation. It is verified here and created from the
+        # configured base branch when missing, so a Google Jules run never starts
+        # against a non-existent ref.
+        from services.github_service import github_service, GitHubAPIError, GitHubAuthError
+        from backend.config import GITHUB_BASE_BRANCH, JULES_BRANCH_PREFLIGHT_MODE
+
+        full_repo = f"{owner}/{repo_name}"
+        try:
+            branch_info = github_service.ensure_branch(
+                full_repo,
+                branch,
+                base_branch=GITHUB_BASE_BRANCH,
+                create_if_missing=True,
+                # A repository the token cannot see (offline/mock coordinates) gives
+                # nothing to verify; Jules will surface its own source error there.
+                allow_unverifiable=True
+            )
+        except (GitHubAuthError, GitHubAPIError) as branch_err:
+            message = (
+                f"Target branch '{branch}' could not be verified or created in {full_repo}: {branch_err}"
+            )
+            if JULES_BRANCH_PREFLIGHT_MODE == "advisory":
+                logger.warning("[Google Jules API] Branch preflight (advisory) proceeding: %s", message)
+            else:
+                raise JulesBranchPreflightError(message) from branch_err
+        else:
+            if branch_info.get("verified"):
+                logger.info(
+                    "[Google Jules API] Branch preflight for %s#%s resolved (created=%s, sha=%s).",
+                    full_repo, branch, branch_info.get("created"), branch_info.get("sha")
+                )
+                if branch_info.get("created"):
+                    logger.info(
+                        "[Google Jules API] Target branch '%s' did not exist and was created from '%s'.",
+                        branch, branch_info.get("base_branch")
+                    )
+            else:
+                logger.warning(
+                    "[Google Jules API] Branch '%s' in %s could not be verified: %s",
+                    branch, full_repo, branch_info.get("skip_reason")
+                )
 
         # Compose rich prompt for Jules including prep directives if present
         jules_prompt = prompt
@@ -202,12 +253,28 @@ class GoogleJulesOrchestrator(BaseCodingAgent):
             )
 
         # Attempt dispatch to official Google Jules REST API (https://developers.google.com/jules/api)
-        jules_session = self._dispatch_jules_api(
-            prompt,
-            container_env,
-            project_config,
-            preparations_result=preparations_result
-        )
+        try:
+            jules_session = self._dispatch_jules_api(
+                prompt,
+                container_env,
+                project_config,
+                preparations_result=preparations_result
+            )
+        except JulesBranchPreflightError as branch_err:
+            logger.error("[Google Jules] Branch preflight blocked dispatch: %s", branch_err)
+            logs.append(f"[Google Jules API] Branch preflight blocked dispatch: {branch_err}")
+            return HarnessResult(
+                status="failed",
+                summary_changes="Google Jules dispatch blocked: target branch could not be prepared on GitHub.",
+                what_was_wrong=str(branch_err),
+                what_was_done="Aborted before creating a Jules session; no changes were applied.",
+                user_check_items=[
+                    "Confirm GITHUB_TOKEN can read branches and create refs in the repository",
+                    "Confirm the base branch (main) exists or the repository has content",
+                    "Re-run the prompt once the target branch is available"
+                ],
+                full_log="\n".join(logs)
+            )
         session_name = None
         if jules_session:
             session_name = jules_session.get("name") or jules_session.get("id", "active_session")

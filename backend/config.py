@@ -157,6 +157,13 @@ JIRA_WEBHOOK_SECRET = os.getenv("JIRA_WEBHOOK_SECRET", "hephaestus_webhook_secre
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_ORGANIZATION = os.getenv("GITHUB_ORGANIZATION", os.getenv("GITHUB_ORG", ""))
 
+# Branch preflight guard for cloud coding agents (Google Jules et al.)
+# The target branch is verified/created on GitHub before a remote session is dispatched.
+GITHUB_BASE_BRANCH = os.getenv("GITHUB_BASE_BRANCH", "main")
+# 'strict'   -> dispatch is blocked when the branch can neither be verified nor created
+# 'advisory' -> a warning is logged and dispatch proceeds
+JULES_BRANCH_PREFLIGHT_MODE = os.getenv("JULES_BRANCH_PREFLIGHT_MODE", "strict").lower()
+
 # Provider & Agent API Keys
 JULES_API_KEY = os.getenv("JULES_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")

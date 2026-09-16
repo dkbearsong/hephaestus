@@ -91,7 +91,7 @@ class AgentNotification(Base):
     id = Column(Integer, primary_key=True, index=True)
     ticket_id = Column(Integer, ForeignKey("tickets.id", ondelete="CASCADE"), nullable=False)
     project_id = Column(Integer, ForeignKey("projects.id", ondelete="CASCADE"), nullable=False)
-    type = Column(String(50), nullable=False) # needs_input, completed, info
+    type = Column(String(50), nullable=False) # needs_input, completed, failed, info
     title = Column(String(255), nullable=False)
     message = Column(Text, nullable=False)
     status = Column(String(50), default="pending") # pending, approved, denied, resolved

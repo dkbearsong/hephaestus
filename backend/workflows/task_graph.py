@@ -360,6 +360,37 @@ class HephaestusWorkflowEngine:
                     "preparations_result": prep_result
                 }
 
+            elif harness_result.status == "failed":
+                # Agent refused dispatch or aborted before producing changes (e.g. missing
+                # target branch in GitHub). Fail loudly instead of reporting review_ready.
+                ticket.status = "failed"
+                failure_reason = harness_result.what_was_wrong or harness_result.summary_changes or "Coding agent dispatch failed."
+
+                session.add(AgentNotification(
+                    ticket_id=ticket.id,
+                    project_id=project.id,
+                    type="failed",
+                    title=f"Dispatch Failed: {ticket.jira_key}",
+                    message=failure_reason,
+                    status="pending",
+                    action_url=f"/tickets/{ticket.id}"
+                ))
+                session.commit()
+
+                self.jira_service.add_comment(
+                    ticket.jira_key,
+                    f"❌ **Coding Agent Dispatch Failed**: {failure_reason}\n\n"
+                    f"No changes were produced. Please resolve the blocker and re-run the prompt."
+                )
+
+                return {
+                    "success": False,
+                    "status": "failed",
+                    "ticket_id": ticket.id,
+                    "reason": failure_reason,
+                    "workspace_orchestration": handoff_record
+                }
+
             else: # completed
                 ticket.status = "review_ready"
 

@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS agent_notifications (
     id SERIAL PRIMARY KEY,
     ticket_id INTEGER NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    type VARCHAR(50) NOT NULL, -- needs_input (red), completed (yellow), info
+    type VARCHAR(50) NOT NULL, -- needs_input (red), completed (yellow), failed (dispatch aborted), info
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     status VARCHAR(50) DEFAULT 'pending', -- pending, approved, denied, resolved
