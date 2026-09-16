@@ -2,7 +2,13 @@
 PostgreSQL Inspector MCP Tool for Hephaestus
 Allows the coding agent to inspect tables, view foreign keys, and query database metadata.
 """
-from fastmcp import FastMCP
+try:
+    from mcp.server.fastmcp import FastMCP
+except (ImportError, ModuleNotFoundError):
+    try:
+        from fastmcp import FastMCP
+    except (ImportError, ModuleNotFoundError):
+        from mcp.server.mcpserver import MCPServer as FastMCP
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor

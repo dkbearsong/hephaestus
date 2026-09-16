@@ -6,7 +6,13 @@ import argparse
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Union
-from mcp.server.fastmcp import FastMCP
+try:
+    from mcp.server.fastmcp import FastMCP
+except (ImportError, ModuleNotFoundError):
+    try:
+        from fastmcp import FastMCP
+    except (ImportError, ModuleNotFoundError):
+        from mcp.server.mcpserver import MCPServer as FastMCP
 
 logger = logging.getLogger("hephaestus.mcp.builtin")
 

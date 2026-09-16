@@ -57,25 +57,23 @@ class IncomingWebhookTester:
     ) -> str:
         """
         Constructs Jira comment body containing trigger prefixes and tags:
-        <|prompt-new|> or <|prompt|>
-        <|flags|> (optional)
-        <|files|> (optional)
-        <|preparations|> (optional)
+        <|prompt|> and <|additional values|> JSON object
         """
         prefix = "<|prompt-new|>" if mode == "PROMPT_NEW" else "<|prompt|>"
         parts = [f"{prefix} {prompt.strip()}"]
 
+        add_vals = {}
+        if mode == "PROMPT_NEW":
+            add_vals["is_new_project"] = True
         if flags:
-            import yaml
-            flags_yaml = yaml.dump(flags, default_flow_style=False).strip()
-            parts.append(f"<|flags|>\n{flags_yaml}\n</|flags|>")
-
+            add_vals["flags"] = flags
         if files:
-            files_content = "\n".join(files)
-            parts.append(f"<|files|>\n{files_content}\n</|files|>")
-
+            add_vals["files"] = files
         if preparations:
-            parts.append(f"<|preparations|>\n{preparations.strip()}\n</|preparations|>")
+            add_vals["preparations"] = preparations
+
+        if add_vals:
+            parts.append(f"<|additional values|>\n{json.dumps(add_vals, indent=2)}\n</|additional values|>")
 
         return "\n\n".join(parts)
 
@@ -261,13 +259,16 @@ class IncomingWebhookTester:
         # Verify Git branch
         v_git_branch = False
         if v_workspace_created:
-            try:
-                branch_res = GitRunner.run_git(["rev-parse", "--abbrev-ref", "HEAD"], cwd=working_dir_path)
-                current_branch = branch_res.stdout.strip()
-                expected_branch = "main" if mode == "PROMPT_NEW" else f"jira-{ticket_key}-agent"
-                v_git_branch = (current_branch == expected_branch or ticket_key.lower() in current_branch)
-            except Exception as ex:
-                errors.append(f"Git check failed: {ex}")
+            if ws_orch.get("cloned") is False or (flags and flags.get("clone") is False):
+                v_git_branch = True
+            else:
+                try:
+                    branch_res = GitRunner.run_git(["rev-parse", "--abbrev-ref", "HEAD"], cwd=working_dir_path)
+                    current_branch = branch_res.stdout.strip()
+                    expected_branch = "main" if mode == "PROMPT_NEW" else f"jira-{ticket_key}-agent"
+                    v_git_branch = (current_branch == expected_branch or ticket_key.lower() in current_branch)
+                except Exception as ex:
+                    errors.append(f"Git check failed: {ex}")
         verifications["git_branch_valid"] = v_git_branch
 
         # Verify Platform Configuration Rules

@@ -15,6 +15,8 @@ logger = logging.getLogger("hephaestus.webhook_watcher")
 
 PROMPT_TAG = "<|prompt|>"
 PROMPT_NEW_TAG = "<|prompt-new|>"
+ADDITIONAL_VALUES_TAG = "<|additional values|>"
+ADDITIONAL_VALUES_END_TAG = "</|additional values|>"
 PREPARATIONS_TAG = "<|preparations|>"
 PREPARATIONS_END_TAG = "</|preparations|>"
 FILES_TAG = "<|files|>"
@@ -36,15 +38,18 @@ class FormattedWebhookPayload(BaseModel):
     summary: str = Field(default="", description="Jira issue summary / title")
     prompt_tag: Optional[str] = Field(default=None, description="'prompt', 'prompt-new', or None")
     is_ai_trigger: bool = Field(default=False, description="True if a valid prompt tag is present")
-    prompt_instructions: str = Field(default="", description="Clean AI prompt instructions with prompt, files, and preparations tags removed")
-    in_memory_comment: str = Field(description="In-memory copy of comment with prompt and preparations tags stripped (retains files block for file staging)")
+    prompt_instructions: str = Field(default="", description="Clean AI prompt instructions with tags removed")
+    in_memory_comment: str = Field(description="In-memory copy of comment with tags stripped")
     raw_comment: str = Field(default="", description="Original raw comment text before stripping")
-    files: List[str] = Field(default_factory=list, description="List of file paths extracted from <|files|> tag")
-    has_files: bool = Field(default=False, description="True if files tag was provided")
-    flags: Dict[str, Any] = Field(default_factory=dict, description="Deterministic YAML configuration flags from <|flags|> tag")
-    has_flags: bool = Field(default=False, description="True if flags tag was provided")
-    preparations: Optional[str] = Field(default=None, description="Optional setup / container / MCP instructions extracted from <|preparations|> tag")
-    has_preparations: bool = Field(default=False, description="True if preparations tag was provided")
+    additional_values: Dict[str, Any] = Field(default_factory=dict, description="JSON object extracted from <|additional values|> tag")
+    has_additional_values: bool = Field(default=False, description="True if <|additional values|> tag was provided")
+    additional_values_valid: bool = Field(default=True, description="False if <|additional values|> tag was present but contained invalid JSON format")
+    files: List[str] = Field(default_factory=list, description="List of file paths extracted from <|additional values|> or <|files|> tag")
+    has_files: bool = Field(default=False, description="True if files were provided")
+    flags: Dict[str, Any] = Field(default_factory=dict, description="Configuration flags extracted from <|additional values|> or <|flags|> tag")
+    has_flags: bool = Field(default=False, description="True if flags were provided")
+    preparations: Optional[str] = Field(default=None, description="Setup instructions extracted from <|additional values|> or <|preparations|> tag")
+    has_preparations: bool = Field(default=False, description="True if preparations were provided")
     author: Dict[str, Any] = Field(default_factory=dict, description="Comment author details")
     event_type: str = Field(default="custom", description="Webhook event type, e.g. comment_created, jira:issue_updated")
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), description="ISO timestamp of receipt")
@@ -249,28 +254,115 @@ class WebhookPayloadFormatter:
 
         return flags_dict, remaining.strip()
 
+    @staticmethod
+    def extract_additional_values_tag(text: str, jira_issue_key: str = "") -> Tuple[Dict[str, Any], bool, bool, str]:
+        """
+        Extracts <|additional values|> tag content from text.
+        Returns:
+            (additional_values_dict, has_tag, is_valid_json, text_without_tag)
+
+        If tag is present but content is not a valid JSON object:
+            Posts a comment to Jira ticket informing the user that additional values did not match the correct format.
+        """
+        if not text or ADDITIONAL_VALUES_TAG not in text:
+            return {}, False, True, text
+
+        block_pattern = re.compile(
+            r"<\|additional values\|>(.*?)(?:<\/\|additional values\|>|<\|endadditional values\|>)",
+            re.DOTALL | re.IGNORECASE
+        )
+        match = block_pattern.search(text)
+        if match:
+            raw_val = match.group(1).strip()
+            remaining = text[:match.start()] + text[match.end():]
+        else:
+            open_pattern = re.compile(
+                r"<\|additional values\|>(.*?)(?=<\|prompt-new\|>|<\|prompt\|>|$)",
+                re.DOTALL | re.IGNORECASE
+            )
+            match = open_pattern.search(text)
+            if match:
+                raw_val = match.group(1).strip()
+                remaining = text[:match.start()] + text[match.end():]
+            else:
+                return {}, False, True, text
+
+        try:
+            parsed = json.loads(raw_val)
+            if isinstance(parsed, dict):
+                return parsed, True, True, remaining.strip()
+        except Exception:
+            pass
+
+        if jira_issue_key:
+            try:
+                from backend.jira_service.client import jira_service
+                jira_service.add_comment(
+                    jira_issue_key,
+                    "The provided <|additional values|> tag did not contain a valid JSON object. Please check your syntax and ensure it is formatted as a JSON object."
+                )
+            except Exception as e:
+                logger.error("Error posting invalid format comment to Jira: %s", e)
+
+        return {}, True, False, remaining.strip()
+
     @classmethod
-    def extract_tags_and_content(cls, text: str) -> Tuple[Optional[str], Optional[str], List[str], Dict[str, Any], str, str]:
+    def extract_tags_and_content(
+        cls, text: str, jira_issue_key: str = ""
+    ) -> Tuple[Optional[str], Optional[str], List[str], Dict[str, Any], str, str, Dict[str, Any], bool, bool]:
         """
         Extracts all structured tag components from comment text:
         - prompt_tag: 'prompt', 'prompt-new', or None
         - preparations: extracted setup/container/MCP instructions, or None
         - files: list of referenced file paths, or []
-        - flags: deterministic YAML configuration settings, or {}
-        - in_memory_comment: comment with prompt and preparations tags stripped (retains files block for file gatherer)
-        - prompt_instructions: pure clean prompt instructions with prompt, preparations, AND files blocks stripped
+        - flags: deterministic configuration settings, or {}
+        - in_memory_comment: comment with tags stripped
+        - prompt_instructions: pure clean prompt instructions
+        - additional_values: dict from <|additional values|> tag
+        - has_additional_values: bool
+        - additional_values_valid: bool
         """
         if not text:
-            return None, None, [], {}, "", ""
+            return None, None, [], {}, "", "", {}, False, True
 
-        # Extract optional flags
-        flags, text_without_flags = cls.extract_flags_tag(text)
+        # Extract <|additional values|>
+        add_vals, has_add_vals, add_vals_valid, text_without_add = cls.extract_additional_values_tag(text, jira_issue_key=jira_issue_key)
 
-        # Extract optional preparations
-        preparations, text_without_prep = cls.extract_preparations_tag(text_without_flags)
+        # Legacy tag extractions
+        flags_legacy, text_without_flags = cls.extract_flags_tag(text_without_add)
+        prep_legacy, text_without_prep = cls.extract_preparations_tag(text_without_flags)
+        files_legacy, text_without_prep_or_files = cls.extract_files_tag(text_without_prep)
 
-        # Extract files
-        files, text_without_prep_or_files = cls.extract_files_tag(text_without_prep)
+        # Consolidate files
+        files: List[str] = []
+        if "files" in add_vals:
+            f_val = add_vals["files"]
+            if isinstance(f_val, list):
+                files = [str(x) for x in f_val]
+            elif isinstance(f_val, str):
+                files = [f_val]
+        else:
+            files = files_legacy
+
+        # Consolidate preparations
+        preparations: Optional[str] = None
+        if "preparations" in add_vals:
+            p_val = add_vals["preparations"]
+            if isinstance(p_val, str):
+                preparations = p_val
+            elif isinstance(p_val, (dict, list)):
+                preparations = json.dumps(p_val)
+            elif p_val is not None:
+                preparations = str(p_val)
+        else:
+            preparations = prep_legacy
+
+        # Consolidate flags
+        flags: Dict[str, Any] = {}
+        if "flags" in add_vals and isinstance(add_vals["flags"], dict):
+            flags = add_vals["flags"]
+        else:
+            flags = flags_legacy
 
         # Check prompt tag
         stripped_leading = text_without_prep.lstrip()
@@ -288,27 +380,51 @@ class WebhookPayloadFormatter:
             in_memory_copy = stripped_leading[len(PROMPT_TAG):].lstrip()
 
         if stripped_clean.startswith(PROMPT_NEW_TAG):
+            if tag_type is None:
+                tag_type = "prompt-new"
             prompt_instructions = stripped_clean[len(PROMPT_NEW_TAG):].lstrip()
         elif stripped_clean.startswith(PROMPT_TAG):
+            if tag_type is None:
+                tag_type = "prompt"
             prompt_instructions = stripped_clean[len(PROMPT_TAG):].lstrip()
 
-        return tag_type, preparations, files, flags, in_memory_copy, prompt_instructions
+        if tag_type is None:
+            raw_stripped = text.lstrip()
+            if raw_stripped.startswith(PROMPT_NEW_TAG):
+                tag_type = "prompt-new"
+                prompt_instructions = raw_stripped[len(PROMPT_NEW_TAG):].lstrip()
+                in_memory_copy = prompt_instructions
+            elif raw_stripped.startswith(PROMPT_TAG):
+                tag_type = "prompt"
+                prompt_instructions = raw_stripped[len(PROMPT_TAG):].lstrip()
+                in_memory_copy = prompt_instructions
+
+        if in_memory_copy.lstrip().startswith(PROMPT_NEW_TAG):
+            in_memory_copy = in_memory_copy.lstrip()[len(PROMPT_NEW_TAG):].lstrip()
+        elif in_memory_copy.lstrip().startswith(PROMPT_TAG):
+            in_memory_copy = in_memory_copy.lstrip()[len(PROMPT_TAG):].lstrip()
+
+        if add_vals.get("is_new_project") or add_vals.get("new_project"):
+            if tag_type == "prompt":
+                tag_type = "prompt-new"
+
+        return tag_type, preparations, files, flags, in_memory_copy, prompt_instructions, add_vals, has_add_vals, add_vals_valid
 
     @classmethod
     def identify_and_strip_prompt_tag(cls, text: str) -> Tuple[Optional[str], str]:
         """
         Identifies whether text begins with <|prompt|> or <|prompt-new|>,
-        and strips the tags (including optional preparations) from the in-memory copy of the comment.
+        and strips the tags from the in-memory copy of the comment.
         Maintains backwards-compatible return signature: (tag_type, in_memory_comment).
         """
-        tag_type, _, _, _, in_memory_copy, _ = cls.extract_tags_and_content(text)
-        return tag_type, in_memory_copy
+        res = cls.extract_tags_and_content(text)
+        return res[0], res[4]
 
     @classmethod
     def format_payload(cls, raw_data: Any) -> FormattedWebhookPayload:
         """
         Extracts and normalizes Jira Cloud or direct JSON webhook payloads,
-        extracting prompt tags, preparations tags, files, and metadata.
+        extracting prompt tags, additional values, preparations tags, files, and metadata.
         """
         if not isinstance(raw_data, dict):
             raise ValueError(f"Invalid webhook payload: expected JSON object / dict, got {type(raw_data).__name__}")
@@ -383,17 +499,15 @@ class WebhookPayloadFormatter:
         if not issue_key:
             issue_key = f"{project_key}-UNKNOWN"
 
-        # Extract qualifier tags (e.g. <|agent:AGENT_NAME|>)
-        from services.parser import QualifierParser
-        parsed_qualifiers = QualifierParser.parse_qualifiers(raw_comment)
-        agent_override = parsed_qualifiers.get("agent_override")
-        target_platform = parsed_qualifiers.get("target_platform")
+        # Extract prompt tag, additional values, preparations, files, flags, and clean in-memory comment
+        tag_type, preparations, files, flags, in_memory_comment, prompt_instructions, add_vals, has_add_vals, add_vals_valid = cls.extract_tags_and_content(
+            raw_comment, jira_issue_key=issue_key
+        )
+        is_ai_trigger = (tag_type is not None) and add_vals_valid
 
-        comment_for_tags = parsed_qualifiers.get("cleaned_comment") or raw_comment
-
-        # Extract prompt tag, optional preparations tag, files, flags, and clean in-memory comment
-        tag_type, preparations, files, flags, in_memory_comment, prompt_instructions = cls.extract_tags_and_content(comment_for_tags)
-        is_ai_trigger = tag_type is not None
+        # Pass target_agent if present in additional values
+        if "target_agent" in add_vals:
+            metadata["target_agent"] = add_vals["target_agent"]
 
         return FormattedWebhookPayload(
             jira_issue_key=issue_key,
@@ -404,6 +518,9 @@ class WebhookPayloadFormatter:
             prompt_instructions=prompt_instructions,
             in_memory_comment=in_memory_comment,
             raw_comment=raw_comment,
+            additional_values=add_vals,
+            has_additional_values=has_add_vals,
+            additional_values_valid=add_vals_valid,
             files=files,
             has_files=len(files) > 0,
             flags=flags,
