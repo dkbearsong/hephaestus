@@ -49,6 +49,8 @@ class FormattedWebhookPayload(BaseModel):
     event_type: str = Field(default="custom", description="Webhook event type, e.g. comment_created, jira:issue_updated")
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), description="ISO timestamp of receipt")
     task_id: str = Field(default_factory=lambda: f"task_{uuid.uuid4().hex[:8]}", description="Unique pipeline task tracking ID")
+    agent_override: Optional[str] = Field(default=None, description="Optional agent override extracted from <|agent:AGENT_NAME|>")
+    target_platform: Optional[str] = Field(default=None, description="Target platform derived from agent override or defaults")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional context, labels, status")
 
 
@@ -381,8 +383,16 @@ class WebhookPayloadFormatter:
         if not issue_key:
             issue_key = f"{project_key}-UNKNOWN"
 
+        # Extract qualifier tags (e.g. <|agent:AGENT_NAME|>)
+        from services.parser import QualifierParser
+        parsed_qualifiers = QualifierParser.parse_qualifiers(raw_comment)
+        agent_override = parsed_qualifiers.get("agent_override")
+        target_platform = parsed_qualifiers.get("target_platform")
+
+        comment_for_tags = parsed_qualifiers.get("cleaned_comment") or raw_comment
+
         # Extract prompt tag, optional preparations tag, files, flags, and clean in-memory comment
-        tag_type, preparations, files, flags, in_memory_comment, prompt_instructions = cls.extract_tags_and_content(raw_comment)
+        tag_type, preparations, files, flags, in_memory_comment, prompt_instructions = cls.extract_tags_and_content(comment_for_tags)
         is_ai_trigger = tag_type is not None
 
         return FormattedWebhookPayload(
@@ -402,6 +412,8 @@ class WebhookPayloadFormatter:
             has_preparations=preparations is not None,
             author=author,
             event_type=event_type,
+            agent_override=agent_override,
+            target_platform=target_platform,
             metadata=metadata
         )
 

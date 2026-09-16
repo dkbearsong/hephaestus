@@ -66,11 +66,21 @@ export default function RunDashboard() {
             ) : (
               runs.map(run => (
                 <tr key={run.id} className="hover:bg-slate-750 transition-colors">
-                  <td className="p-3 font-mono">{run.jira_key || 'N/A'}</td>
+                  <td className="p-3 font-mono">
+                    <div className="flex items-center gap-2">
+                      <span>{run.jira_key || 'N/A'}</span>
+                      {run.agent_name && (
+                        <span className="px-2 py-0.5 text-xs bg-indigo-900/60 text-indigo-300 rounded font-semibold border border-indigo-700">
+                          Agent: {run.agent_name}
+                        </span>
+                      )}
+                    </div>
+                  </td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
+                    <span className={`px-2 py-1 text-xs rounded-full font-bold ${
                       run.status === 'COMPLETED' ? 'bg-green-900/50 text-green-400' :
                       run.status === 'FAILED' ? 'bg-red-900/50 text-red-400' :
+                      run.status === 'AWAITING_PERMISSION' ? 'bg-amber-900/80 text-amber-300 animate-pulse border border-amber-500' :
                       run.status === 'QUEUED' ? 'bg-slate-700 text-slate-300' :
                       'bg-blue-900/50 text-blue-400'
                     }`}>

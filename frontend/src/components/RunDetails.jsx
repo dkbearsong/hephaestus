@@ -60,9 +60,15 @@ export default function RunDetails({ runId, onBack }) {
         <div className="flex items-center gap-4">
           <button onClick={onBack} className="text-slate-400 hover:text-white px-3 py-1 rounded bg-slate-800">&larr; Back</button>
           <h2 className="text-xl font-bold font-mono text-blue-400">{run.jira_key || 'UNKNOWN'}</h2>
+          {run.agent_name && (
+            <span className="px-2 py-0.5 text-xs bg-indigo-900/60 text-indigo-300 rounded font-semibold border border-indigo-700">
+              Agent: {run.agent_name}
+            </span>
+          )}
           <span className={`px-2 py-1 text-xs rounded-full font-bold ${
             run.status === 'COMPLETED' ? 'bg-green-900/50 text-green-400' :
             run.status === 'FAILED' ? 'bg-red-900/50 text-red-400' :
+            run.status === 'AWAITING_PERMISSION' ? 'bg-amber-900/80 text-amber-300 animate-pulse border border-amber-500' :
             run.status === 'QUEUED' ? 'bg-slate-700 text-slate-300' :
             'bg-blue-900/50 text-blue-400'
           }`}>
@@ -74,6 +80,40 @@ export default function RunDetails({ runId, onBack }) {
           Branch: <span className="text-slate-300 font-mono">{run.branch_name || 'N/A'}</span>
         </div>
       </div>
+
+      {run.status === 'AWAITING_PERMISSION' && (
+        <div className="bg-amber-950/80 border-b border-amber-600 p-4 flex items-center justify-between text-amber-200">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl animate-bounce">⚠️</span>
+            <div>
+              <h3 className="font-bold text-amber-300">Permission Escalation Requested</h3>
+              <p className="text-xs text-amber-200/80">The agent inside the Docker container is attempting to access external resources outside the sandbox boundary.</p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={async () => {
+                await api.approveRun(runId);
+                const updated = await api.getRun(runId);
+                setRun(updated);
+              }}
+              className="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-2 rounded text-xs transition-colors shadow"
+            >
+              Approve Access
+            </button>
+            <button
+              onClick={async () => {
+                await api.abortRun(runId);
+                const updated = await api.getRun(runId);
+                setRun(updated);
+              }}
+              className="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded text-xs transition-colors shadow"
+            >
+              Deny & Abort
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-1 overflow-hidden">
         {/* Main Event Stream */}
