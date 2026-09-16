@@ -51,11 +51,17 @@ async def get_run(run_id: uuid.UUID):
         run = await session.get(Run, run_id)
         if not run:
             raise HTTPException(404, "Run not found")
+
+        agent_name = None
+        if run.metrics and isinstance(run.metrics, dict):
+            agent_name = run.metrics.get("agent_override") or run.metrics.get("agent_name")
+
         return {
             "id": str(run.id),
             "jira_key": run.jira_key,
             "status": run.status,
             "target_platform": run.target_platform,
+            "agent_name": agent_name,
             "branch_name": run.branch_name,
             "prep_summary": run.prep_summary,
             "metrics": run.metrics,
@@ -63,6 +69,49 @@ async def get_run(run_id: uuid.UUID):
             "created_at": run.created_at,
             "updated_at": run.updated_at
         }
+
+@router.post("/runs/{run_id}/approve")
+async def approve_run_permission(run_id: uuid.UUID):
+    """
+    Resolves pending permission escalation for a run and signals runner to proceed.
+    """
+    from services.sandbox.guardrail import sandbox_guardrail
+    if not async_session_factory:
+        raise HTTPException(500, "Database session factory not configured.")
+
+    async with async_session_factory() as session:
+        run = await session.get(Run, run_id)
+        if not run:
+            raise HTTPException(404, "Run not found")
+        if run.status == "AWAITING_PERMISSION":
+            run.status = "CODING"
+            await session.commit()
+
+    sandbox_guardrail.resolve_permission(str(run_id), approved=True)
+    return {"status": "success", "message": f"Run {run_id} permission approved."}
+
+@router.post("/runs/{run_id}/abort")
+async def abort_run(run_id: uuid.UUID):
+    """
+    Forces container termination (container.kill()) and sets run status to FAILED.
+    """
+    from services.sandbox.docker_runner import local_docker_runner
+    from services.sandbox.guardrail import sandbox_guardrail
+
+    if not async_session_factory:
+        raise HTTPException(500, "Database session factory not configured.")
+
+    sandbox_guardrail.resolve_permission(str(run_id), approved=False)
+    await local_docker_runner.kill_container(str(run_id))
+
+    async with async_session_factory() as session:
+        run = await session.get(Run, run_id)
+        if run:
+            run.status = "FAILED"
+            run.error_message = "Run aborted by user."
+            await session.commit()
+
+    return {"status": "success", "message": f"Run {run_id} container aborted."}
 
 @router.get("/runs/{run_id}/events")
 async def get_run_events(run_id: uuid.UUID):

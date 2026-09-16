@@ -54,6 +54,8 @@ class FormattedWebhookPayload(BaseModel):
     event_type: str = Field(default="custom", description="Webhook event type, e.g. comment_created, jira:issue_updated")
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), description="ISO timestamp of receipt")
     task_id: str = Field(default_factory=lambda: f"task_{uuid.uuid4().hex[:8]}", description="Unique pipeline task tracking ID")
+    agent_override: Optional[str] = Field(default=None, description="Optional agent override extracted from <|agent:AGENT_NAME|>")
+    target_platform: Optional[str] = Field(default=None, description="Target platform derived from agent override or defaults")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional context, labels, status")
 
 
@@ -527,6 +529,8 @@ class WebhookPayloadFormatter:
             has_preparations=preparations is not None,
             author=author,
             event_type=event_type,
+            agent_override=agent_override,
+            target_platform=target_platform,
             metadata=metadata
         )
 
