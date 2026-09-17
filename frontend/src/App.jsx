@@ -182,6 +182,7 @@ export default function App() {
           onSelectProject={handleSelectProject}
           onSelectTicket={handleSelectTicket}
           onViewQueueHistory={handleViewQueueHistory}
+          onViewRunsDashboard={() => setCurrentView('runs-dashboard')}
           onSelectWorkLog={(id) => setSelectedWorkLogId(id)}
         />
 

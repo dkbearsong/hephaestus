@@ -1,8 +1,14 @@
 import os
 import uuid
 import logging
-import asyncio
-from backend.db.service import create_run, update_run_status, append_event
+from backend.db.service import (
+    create_run,
+    update_run_status,
+    append_event,
+    create_run_sync,
+    update_run_status_sync,
+    append_event_sync
+)
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from backend.config import preferences
@@ -126,6 +132,59 @@ class HephaestusWorkflowEngine:
                 logger.info("Comment does not contain trigger prefix. Skipping.")
                 return {"success": False, "reason": "No prompt trigger prefix found"}
 
+        # Determine mode, agent, and platform
+        is_new_proj = is_new_project if is_new_project is not None else prompt_meta.get("is_new_project", False)
+        run_mode = "PROMPT_NEW" if is_new_proj else "PROMPT"
+        effective_agent = target_agent or getattr(preferences.harness, "active", "google_jules")
+
+        platform_map = {
+            "google_jules": "GOOGLE_JULES",
+            "jules": "GOOGLE_JULES",
+            "openai_codex_cloud": "CODEX_CLOUD",
+            "codex_cloud": "CODEX_CLOUD",
+            "codex": "CODEX_CLOUD",
+            "docker_sandbox_claude_codex": "LOCAL_CONTAINER",
+            "local_container": "LOCAL_CONTAINER",
+            "grok_build": "LOCAL_CONTAINER",
+            "grok": "LOCAL_CONTAINER",
+            "devin_ai": "LOCAL_CONTAINER",
+            "devin": "LOCAL_CONTAINER",
+            "cursor_agent": "LOCAL_CONTAINER",
+            "cursor_dev_container": "LOCAL_CONTAINER",
+            "cursor_devcontainer": "LOCAL_CONTAINER",
+            "antigravity": "LOCAL_CONTAINER",
+            "claude_code": "LOCAL_CONTAINER",
+            "aider": "LOCAL_CONTAINER",
+            "custom": "LOCAL_CONTAINER"
+        }
+        resolved_platform = platform_map.get(
+            str(effective_agent).lower() if effective_agent else "",
+            "GOOGLE_JULES" if str(effective_agent).lower() in ("google_jules", "jules") else "LOCAL_CONTAINER"
+        )
+        initial_branch = f"hephaestus/{jira_issue_key.lower()}-{task_id}"
+
+        run_id = create_run_sync(
+            jira_key=jira_issue_key,
+            mode=run_mode,
+            target_platform=resolved_platform,
+            status="QUEUED",
+            branch_name=initial_branch,
+            metrics={"agent_name": effective_agent, "task_id": task_id}
+        )
+        append_event_sync(
+            run_id=run_id,
+            event_type="TASK_INITIALIZED",
+            payload={
+                "jira_key": jira_issue_key,
+                "task_id": task_id,
+                "agent": effective_agent,
+                "platform": resolved_platform,
+                "mode": run_mode,
+                "summary": issue_summary
+            },
+            level="INFO"
+        )
+
         # Step 2: Remove trigger label in Jira to prevent infinite webhook loops
         self.jira_service.remove_trigger_label(jira_issue_key)
 
@@ -146,10 +205,30 @@ class HephaestusWorkflowEngine:
         prep_result: Optional[Dict[str, Any]] = None
         if effective_prep and getattr(preferences.preparations_step, "enabled", True):
             logger.info("[Workflow Pipeline] Executing Preparations LangGraph step for %s (Task: %s)", jira_issue_key, task_id)
+            update_run_status_sync(run_id, status="PREPARING")
+            append_event_sync(
+                run_id=run_id,
+                event_type="PREPARATIONS_STARTED",
+                payload={
+                    "preparations": effective_prep[:200],
+                    "provider": getattr(preferences.preparations_step, "provider", "gemini")
+                },
+                level="INFO"
+            )
             prep_result = self.preparations_runner.run_preparations(
                 task_id=task_id,
                 preparations_prompt=effective_prep,
-                staging_dir=staging_dir
+                staging_dir=staging_dir,
+                run_id=run_id
+            )
+            append_event_sync(
+                run_id=run_id,
+                event_type="PREPARATIONS_COMPLETED",
+                payload={
+                    "end_token_received": prep_result.get("end_token_received"),
+                    "final_response": prep_result.get("final_response")
+                },
+                level="INFO"
             )
             logger.info("[Workflow Pipeline] Preparations step completed. End-of-Token received: %s. Continuing to Coding Agent stage.",
                         prep_result.get("end_token_received"))
@@ -197,28 +276,6 @@ class HephaestusWorkflowEngine:
                 session.commit()
 
             # Bridge to WorkspaceOrchestrator (scaffolding, provider prep, prep agent, handoff)
-            platform_map = {
-                "google_jules": "GOOGLE_JULES",
-                "jules": "GOOGLE_JULES",
-                "openai_codex_cloud": "CODEX_CLOUD",
-                "codex_cloud": "CODEX_CLOUD",
-                "codex": "CODEX_CLOUD",
-                "docker_sandbox_claude_codex": "LOCAL_CONTAINER",
-                "local_container": "LOCAL_CONTAINER",
-                "grok_build": "GROK_BUILD",
-                "grok": "GROK_BUILD",
-                "devin_ai": "DEVIN_AI",
-                "devin": "DEVIN_AI",
-                "cursor_agent": "CURSOR_DEVCONTAINER",
-                "cursor_dev_container": "CURSOR_DEVCONTAINER",
-                "cursor_devcontainer": "CURSOR_DEVCONTAINER"
-            }
-            effective_agent = target_agent or getattr(preferences.harness, "active", "google_jules")
-            resolved_platform = platform_map.get(
-                str(effective_agent).lower() if effective_agent else "",
-                "GOOGLE_JULES" if str(effective_agent).lower() in ("google_jules", "jules") else "LOCAL_CONTAINER"
-            )
-
             handoff_record = None
             try:
                 from services.models import WorkspaceTriggerPayload
@@ -264,6 +321,24 @@ class HephaestusWorkflowEngine:
                 if handoff_state.repo_url and not project.repo_url:
                     project.repo_url = handoff_state.repo_url
                     session.commit()
+
+                update_run_status_sync(
+                    run_id,
+                    status="PREPARING",
+                    branch_name=ticket.branch_name,
+                    prep_summary=handoff_record.get("prep_summary")
+                )
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="WORKSPACE_ORCHESTRATED",
+                    payload={
+                        "working_directory": handoff_record.get("working_directory"),
+                        "branch_name": handoff_record.get("branch_name"),
+                        "target_platform": handoff_record.get("target_platform"),
+                        "ready_for_execution": handoff_record.get("ready_for_execution")
+                    },
+                    level="INFO"
+                )
             except Exception as e:
                 logger.warning(f"WorkspaceOrchestrator step encountered: {e}")
 
@@ -273,9 +348,17 @@ class HephaestusWorkflowEngine:
                 logger.warning(
                     f"Skipping coding agent platform dispatch for {jira_issue_key}: {blocker_reason}"
                 )
+                update_run_status_sync(run_id, status="FAILED", error_message=blocker_reason)
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="RUN_FAILED",
+                    payload={"reason": blocker_reason},
+                    level="ERROR"
+                )
                 return {
                     "success": False,
                     "task_id": task_id,
+                    "run_id": str(run_id) if run_id else None,
                     "jira_key": jira_issue_key,
                     "status": "BLOCKED",
                     "reason": blocker_reason,
@@ -284,6 +367,17 @@ class HephaestusWorkflowEngine:
 
             # Step 5: Execute with Coding Agent Orchestrator
             # (which validates prompt, initiates container environment, and executes task)
+            update_run_status_sync(run_id, status="CODING", branch_name=ticket.branch_name)
+            append_event_sync(
+                run_id=run_id,
+                event_type="CODING_STARTED",
+                payload={
+                    "agent": effective_agent,
+                    "platform": resolved_platform,
+                    "branch": ticket.branch_name
+                },
+                level="INFO"
+            )
             active_harness = self.harness
             effective_repo = project.repo_url or (handoff_record.get("repo_url") if handoff_record else None) or resolved_repo
             container_info = {
@@ -318,6 +412,29 @@ class HephaestusWorkflowEngine:
                     target_agent=effective_agent
                 )
 
+            # Stream logs from coding agent into run_events
+            if harness_result.full_log:
+                for line in harness_result.full_log.splitlines():
+                    line = line.strip()
+                    if line:
+                        append_event_sync(
+                            run_id=run_id,
+                            event_type="DOCKER_STDOUT",
+                            payload={"log": line},
+                            level="INFO"
+                        )
+
+            if harness_result.git_diff:
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="DIFF_GENERATED",
+                    payload={
+                        "summary_changes": harness_result.summary_changes,
+                        "diff": harness_result.git_diff
+                    },
+                    level="INFO"
+                )
+
             ticket.container_id = f"container_{project.key}_{ticket.branch_name}"
             ticket.image_id = f"sandbox_{effective_agent or 'active'}"
             session.commit()
@@ -326,6 +443,21 @@ class HephaestusWorkflowEngine:
             now = datetime.now(timezone.utc)
             if harness_result.status == "paused_waiting_input":
                 ticket.status = "paused_waiting_input"
+
+                update_run_status_sync(
+                    run_id,
+                    status="AWAITING_PERMISSION",
+                    error_message=harness_result.question_for_user
+                )
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="PERMISSION_REQUESTED",
+                    payload={
+                        "question": harness_result.question_for_user,
+                        "requested_permission": harness_result.requested_permission
+                    },
+                    level="WARNING"
+                )
 
                 # Create Agent Notification (RED SHAKING ICON)
                 notif = AgentNotification(
@@ -355,6 +487,8 @@ class HephaestusWorkflowEngine:
                 return {
                     "success": True,
                     "status": "paused_waiting_input",
+                    "task_id": task_id,
+                    "run_id": str(run_id) if run_id else None,
                     "ticket_id": ticket.id,
                     "question": harness_result.question_for_user,
                     "preparations_result": prep_result
@@ -365,6 +499,14 @@ class HephaestusWorkflowEngine:
                 # target branch in GitHub). Fail loudly instead of reporting review_ready.
                 ticket.status = "failed"
                 failure_reason = harness_result.what_was_wrong or harness_result.summary_changes or "Coding agent dispatch failed."
+
+                update_run_status_sync(run_id, status="FAILED", error_message=failure_reason)
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="RUN_FAILED",
+                    payload={"error": failure_reason},
+                    level="ERROR"
+                )
 
                 session.add(AgentNotification(
                     ticket_id=ticket.id,
@@ -386,6 +528,8 @@ class HephaestusWorkflowEngine:
                 return {
                     "success": False,
                     "status": "failed",
+                    "task_id": task_id,
+                    "run_id": str(run_id) if run_id else None,
                     "ticket_id": ticket.id,
                     "reason": failure_reason,
                     "workspace_orchestration": handoff_record
@@ -479,9 +623,36 @@ class HephaestusWorkflowEngine:
                 session.add(notif)
                 session.commit()
 
+                pr_url = pr_info.get("html_url") if pr_info else None
+                update_run_status_sync(
+                    run_id,
+                    status="COMPLETED",
+                    pr_url=pr_url,
+                    metrics={
+                        "agent_name": effective_agent,
+                        "task_id": task_id,
+                        "session_id": harness_result.session_id,
+                        "has_remote_jules": has_remote_jules,
+                        "summary_changes": harness_result.summary_changes
+                    }
+                )
+                append_event_sync(
+                    run_id=run_id,
+                    event_type="RUN_COMPLETED",
+                    payload={
+                        "status": "COMPLETED",
+                        "pr_url": pr_url,
+                        "session_id": harness_result.session_id,
+                        "summary": harness_result.summary_changes
+                    },
+                    level="INFO"
+                )
+
                 return {
                     "success": True,
                     "status": "review_ready",
+                    "task_id": task_id,
+                    "run_id": str(run_id) if run_id else None,
                     "ticket_id": ticket.id,
                     "work_log_id": work_log.id,
                     "summary_changes": harness_result.summary_changes,

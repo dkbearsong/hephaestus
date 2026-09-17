@@ -499,15 +499,36 @@ class WebhookPayloadFormatter:
         if not issue_key:
             issue_key = f"{project_key}-UNKNOWN"
 
+        # Extract qualifier tags (e.g. <|agent:AGENT_NAME|>)
+        from services.parser import QualifierParser
+        parsed_qualifiers = QualifierParser.parse_qualifiers(raw_comment)
+        agent_override = parsed_qualifiers.get("agent_override")
+        target_platform = parsed_qualifiers.get("target_platform")
+
+        comment_for_tags = parsed_qualifiers.get("cleaned_comment") or raw_comment
+
         # Extract prompt tag, additional values, preparations, files, flags, and clean in-memory comment
         tag_type, preparations, files, flags, in_memory_comment, prompt_instructions, add_vals, has_add_vals, add_vals_valid = cls.extract_tags_and_content(
-            raw_comment, jira_issue_key=issue_key
+            comment_for_tags, jira_issue_key=issue_key
         )
         is_ai_trigger = (tag_type is not None) and add_vals_valid
 
         # Pass target_agent if present in additional values
         if "target_agent" in add_vals:
             metadata["target_agent"] = add_vals["target_agent"]
+            if not agent_override:
+                agent_override = add_vals["target_agent"]
+
+        # Direct fields fallback
+        if "target_agent" in raw_data and not agent_override:
+            agent_override = raw_data.get("target_agent")
+            metadata["target_agent"] = agent_override
+
+        if not target_platform:
+            if "target_platform" in add_vals:
+                target_platform = add_vals["target_platform"]
+            elif "target_platform" in raw_data:
+                target_platform = raw_data["target_platform"]
 
         return FormattedWebhookPayload(
             jira_issue_key=issue_key,
@@ -715,7 +736,7 @@ class WebhookWatcher:
                     params = sig.parameters
                     has_var_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params.values())
 
-                    target_agent = formatted.metadata.get("target_agent")
+                    target_agent = formatted.agent_override or formatted.metadata.get("target_agent")
                     if target_agent is not None and ("target_agent" in params or has_var_kwargs):
                         kwargs["target_agent"] = target_agent
 

@@ -3,7 +3,7 @@ import json
 import logging
 from backend.db.service import append_event
 from pathlib import Path
-from typing import Dict, Any, List, Optional, TypedDict
+from typing import Dict, Any, List, Optional, TypedDict, Union
 from langgraph.graph import StateGraph, START, END
 from backend.config import preferences, ROOT_DIR
 from backend.harness.mcp_loader import mcp_loader
@@ -27,6 +27,7 @@ class PreparationsState(TypedDict):
     end_reason: str
     final_response: Optional[str]
     staging_dir: Optional[str]
+    run_id: Optional[str]
     error: Optional[str]
 
 class PreparationsGraphRunner:
@@ -251,6 +252,7 @@ class PreparationsGraphRunner:
         task_id: str,
         preparations_prompt: str,
         staging_dir: Optional[str] = None,
+        run_id: Optional[Union[str, Any]] = None,
         provider: Optional[str] = None,
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
@@ -291,6 +293,7 @@ class PreparationsGraphRunner:
             "end_reason": "",
             "final_response": None,
             "staging_dir": staging_dir,
+            "run_id": str(run_id) if run_id else None,
             "error": None
         }
 

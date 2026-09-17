@@ -7,6 +7,7 @@ import {
   FolderGit2,
   GitBranch,
   History,
+  Activity,
   MessageSquare,
   Sparkles,
   AlertCircle,
@@ -26,6 +27,7 @@ export default function LeftSidebar({
   onSelectProject,
   onSelectTicket,
   onViewQueueHistory,
+  onViewRunsDashboard,
   onSelectWorkLog
 }) {
   // State tracking expanded projects
@@ -48,6 +50,18 @@ export default function LeftSidebar({
           className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 mb-6"
         >
           <ChevronRight className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onViewRunsDashboard}
+          title="Coding Agent Runs Dashboard"
+          className={`p-2 rounded-lg mb-3 ${
+            currentView === 'runs-dashboard'
+              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
         </button>
 
         <button
@@ -102,6 +116,26 @@ export default function LeftSidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-6">
+        {/* Navigation Switcher: Runs Dashboard */}
+        <div>
+          <button
+            onClick={onViewRunsDashboard}
+            className={`w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs font-semibold border transition ${
+              currentView === 'runs-dashboard'
+                ? 'bg-blue-500/20 text-blue-300 border-blue-500/50 shadow-sm'
+                : 'bg-slate-950 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <Activity className="w-4 h-4 text-blue-400" />
+              Agent Runs Dashboard
+            </span>
+            <span className="text-[10px] bg-blue-950/80 text-blue-400 border border-blue-800/60 px-1.5 py-0.5 rounded font-mono font-bold">
+              LIVE
+            </span>
+          </button>
+        </div>
+
         {/* Section 1: Top - 5 Most Recent Actions & Queue History Link */}
         <div>
           <div className="flex items-center justify-between mb-2">

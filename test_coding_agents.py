@@ -208,6 +208,11 @@ def main():
         action="store_true",
         help="Receive an incoming signed Jira webhook and test WorkspaceOrchestrator from there"
     )
+    parser.add_argument(
+        "--all-workspace-platforms",
+        action="store_true",
+        help="Run WorkspaceOrchestrator test across all supported platforms"
+    )
 
     args = parser.parse_args()
 

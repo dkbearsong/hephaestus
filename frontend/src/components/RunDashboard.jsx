@@ -8,8 +8,8 @@ export default function RunDashboard() {
   const [selectedRunId, setSelectedRunId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = async () => {
-    setLoading(true);
+  const fetchDashboardData = async (isBackground = false) => {
+    if (!isBackground) setLoading(true);
     try {
       const runsData = await api.getRuns();
       setRuns(runsData);
@@ -18,12 +18,16 @@ export default function RunDashboard() {
     } catch (e) {
       console.error('Error fetching dashboard data:', e);
     } finally {
-      setLoading(false);
+      if (!isBackground) setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchDashboardData();
+    const interval = setInterval(() => {
+      fetchDashboardData(true);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   if (selectedRunId) {
@@ -32,7 +36,15 @@ export default function RunDashboard() {
 
   return (
     <div className="p-6 h-full flex flex-col bg-slate-900 text-slate-100 overflow-y-auto">
-      <h1 className="text-2xl font-bold mb-4">Coding Agent Runs Dashboard</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold">Coding Agent Runs Dashboard</h1>
+        <button
+          onClick={() => fetchDashboardData()}
+          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-md border border-slate-600 transition-colors flex items-center gap-1.5 shadow-sm"
+        >
+          <span>↻</span> Refresh
+        </button>
+      </div>
 
       {stats && (
         <div className="flex gap-4 mb-8">

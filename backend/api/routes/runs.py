@@ -39,9 +39,27 @@ async def list_runs(
                 "jira_key": r.jira_key,
                 "status": r.status,
                 "target_platform": r.target_platform,
+                "agent_name": (r.metrics.get("agent_override") or r.metrics.get("agent_name")) if (r.metrics and isinstance(r.metrics, dict)) else None,
                 "created_at": r.created_at
             } for r in runs
         ]
+
+@router.get("/runs/stats")
+@router.get("/stats")
+async def get_stats():
+    if not async_session_factory:
+        raise HTTPException(500, "Database session factory not configured.")
+    async with async_session_factory() as session:
+        total_runs = await session.execute(select(func.count(Run.id)))
+        total_runs = total_runs.scalar()
+
+        success_runs = await session.execute(select(func.count(Run.id)).where(Run.status == "COMPLETED"))
+        success_runs = success_runs.scalar()
+
+        return {
+            "total_runs": total_runs,
+            "success_rate": (success_runs / total_runs * 100) if total_runs > 0 else 0
+        }
 
 @router.get("/runs/{run_id}")
 async def get_run(run_id: uuid.UUID):
@@ -160,19 +178,3 @@ async def stream_run_events(run_id: uuid.UUID):
             await asyncio.sleep(2)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
-
-@router.get("/stats")
-async def get_stats():
-    if not async_session_factory:
-        raise HTTPException(500, "Database session factory not configured.")
-    async with async_session_factory() as session:
-        total_runs = await session.execute(select(func.count(Run.id)))
-        total_runs = total_runs.scalar()
-
-        success_runs = await session.execute(select(func.count(Run.id)).where(Run.status == "COMPLETED"))
-        success_runs = success_runs.scalar()
-
-        return {
-            "total_runs": total_runs,
-            "success_rate": (success_runs / total_runs * 100) if total_runs > 0 else 0
-        }
