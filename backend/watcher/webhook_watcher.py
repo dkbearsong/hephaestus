@@ -34,6 +34,7 @@ class FormattedWebhookPayload(BaseModel):
     to subsequent downstream workflow and coding harness steps.
     """
     jira_issue_key: str = Field(description="Standard Jira ticket key, e.g. PROJ-101")
+    parent_issue_key: Optional[str] = Field(default=None, description="Standard Jira parent ticket key if one exists")
     project_key: str = Field(description="Project key identifier, e.g. PROJ")
     summary: str = Field(default="", description="Jira issue summary / title")
     prompt_tag: Optional[str] = Field(default=None, description="'prompt', 'prompt-new', or None")
@@ -432,10 +433,13 @@ class WebhookPayloadFormatter:
         event_type = raw_data.get("webhookEvent") or raw_data.get("event") or "custom"
         raw_comment = ""
         issue_key = ""
+        parent_issue_key = ""
         issue_summary = ""
         project_key = ""
         author: Dict[str, Any] = {}
         metadata: Dict[str, Any] = {}
+        agent_override = None
+        target_platform = None
 
         # 1. Extract from standard Jira comment payload
         if "comment" in raw_data and isinstance(raw_data["comment"], dict):
@@ -475,6 +479,8 @@ class WebhookPayloadFormatter:
             issue_summary = fields.get("summary", "") or ""
             labels = fields.get("labels", []) or []
             metadata["labels"] = labels
+            if "parent" in fields and isinstance(fields["parent"], dict):
+                parent_issue_key = fields["parent"].get("key", "") or ""
             if "project" in fields and isinstance(fields["project"], dict):
                 project_key = fields["project"].get("key", "") or ""
             if "status" in fields and isinstance(fields["status"], dict):
@@ -483,6 +489,8 @@ class WebhookPayloadFormatter:
         # Direct fields fallback
         if "target_agent" in raw_data:
             metadata["target_agent"] = raw_data.get("target_agent")
+        if not parent_issue_key and "parent_issue_key" in raw_data:
+            parent_issue_key = str(raw_data.get("parent_issue_key") or "")
         if not issue_key and "jira_issue_key" in raw_data:
             issue_key = str(raw_data.get("jira_issue_key") or "")
         if not issue_summary and "summary" in raw_data:
@@ -505,12 +513,39 @@ class WebhookPayloadFormatter:
         )
         is_ai_trigger = (tag_type is not None) and add_vals_valid
 
+        # 5. Extract agent override tag <|agent:NAME|> from in_memory_comment
+        agent_override = None
+        target_platform = None
+        agent_match = re.search(r"<\|agent:([^>]+)\|>", in_memory_comment)
+        if agent_match:
+            agent_override = agent_match.group(1).strip()
+            in_memory_comment = in_memory_comment.replace(agent_match.group(0), "").strip()
+
         # Pass target_agent if present in additional values
         if "target_agent" in add_vals:
             metadata["target_agent"] = add_vals["target_agent"]
+            if not agent_override:
+                agent_override = metadata["target_agent"]
+
+        if agent_override:
+            agent_norm = agent_override.lower()
+            if agent_norm in ("claude_code", "docker_sandbox_claude_codex", "claude_codex"):
+                target_platform = "LOCAL_CONTAINER"
+            elif agent_norm in ("google_jules", "jules"):
+                target_platform = "GOOGLE_JULES"
+            elif agent_norm in ("openai_codex_cloud", "codex", "codex_cloud"):
+                target_platform = "CODEX_CLOUD"
+            elif agent_norm in ("grok_build", "grok"):
+                target_platform = "GROK_BUILD"
+            elif agent_norm in ("devin_ai", "devin"):
+                target_platform = "DEVIN_AI"
+            elif agent_norm in ("cursor_devcontainer", "cursor_agent", "cursor"):
+                target_platform = "CURSOR_DEVCONTAINER"
+
 
         return FormattedWebhookPayload(
             jira_issue_key=issue_key,
+            parent_issue_key=parent_issue_key,
             project_key=project_key,
             summary=issue_summary,
             prompt_tag=tag_type,
@@ -724,6 +759,9 @@ class WebhookWatcher:
 
                     if formatted.flags and ("flags" in params or has_var_kwargs):
                         kwargs["flags"] = formatted.flags
+
+                    if formatted.parent_issue_key and ("parent_issue_key" in params or has_var_kwargs):
+                        kwargs["parent_issue_key"] = formatted.parent_issue_key
                 except Exception:
                     pass
 

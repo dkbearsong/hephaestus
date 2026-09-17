@@ -80,7 +80,8 @@ class HephaestusWorkflowEngine:
         preparations: Optional[str] = None,
         target_agent: Optional[str] = None,
         is_new_project: Optional[bool] = None,
-        flags: Optional[Dict[str, Any]] = None
+        flags: Optional[Dict[str, Any]] = None,
+        parent_issue_key: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Main workflow pipeline triggered by incoming Jira Webhook.
@@ -179,7 +180,8 @@ class HephaestusWorkflowEngine:
                 Ticket.jira_key == jira_issue_key
             ).first()
 
-            branch_name = f"hephaestus/{jira_issue_key.lower()}-{task_id}"
+            effective_issue_key = parent_issue_key if parent_issue_key else jira_issue_key
+            branch_name = f"hephaestus/{effective_issue_key.lower()}-{task_id}"
             if not ticket:
                 ticket = Ticket(
                     project_id=project.id,
