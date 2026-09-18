@@ -126,7 +126,7 @@ class MCPManager:
                 )
             except Exception as e:
                 # Fault Tolerance:
-                # If an external MCP server from user-preferences.yml fails to start,
+                # If an external MCP server from user_preferences.yaml fails to start,
                 # log an error and continue with the built-in tools rather than crashing the pipeline.
                 if server_name == "builtin":
                     logger.error("Failed to start critical built-in MCP server '%s': %s", server_name, e)
