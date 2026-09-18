@@ -185,9 +185,7 @@ async def run_lm_studio_mcp_test(
         client = LLMProviderClient(mock_mode=True)
 
     # Initialize MCP Manager with datetime_tool and file_writer_tool
-    pref_file = ROOT_DIR / "user-preferences.yml"
-    if not pref_file.exists():
-        pref_file = ROOT_DIR / "user_preferences.yaml"
+    pref_file = ROOT_DIR / "user_preferences.yaml"
 
     if verbose:
         print("-" * 80)

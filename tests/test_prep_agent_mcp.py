@@ -56,7 +56,7 @@ mcp_servers:
     command: "python"
     args: ["-m", "my_custom_mcp_linter"]
 """
-    pref_file = tmp_path / "user-preferences.yml"
+    pref_file = tmp_path / "user_preferences.yaml"
     pref_file.write_text(yaml_content, encoding="utf-8")
 
     prefs = load_user_preferences(pref_file)
@@ -80,7 +80,7 @@ mcp_servers:
     command: "python"
     args: ["-c", "print('hello')"]
 """
-    pref_file = tmp_path / "user-preferences.yml"
+    pref_file = tmp_path / "user_preferences.yaml"
     pref_file.write_text(yaml_content, encoding="utf-8")
 
     workspace = tmp_path / "workspace"
@@ -199,7 +199,7 @@ mcp_servers:
     command: "non_existent_binary_xyz_12345"
     args: ["--bad"]
 """
-    pref_file = tmp_path / "user-preferences.yml"
+    pref_file = tmp_path / "user_preferences.yaml"
     pref_file.write_text(broken_yaml, encoding="utf-8")
 
     # Starting MCPManager should NOT crash the entire pipeline

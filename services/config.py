@@ -52,16 +52,9 @@ def find_preferences_file(custom_path: Optional[Union[str, Path]] = None) -> Opt
         return None
 
     root_dir = Path(__file__).resolve().parent.parent
-    candidate_names = [
-        "user-preferences.yml",
-        "user-preferences.yaml",
-        "user_preferences.yml",
-        "user_preferences.yaml"
-    ]
-    for name in candidate_names:
-        p = root_dir / name
-        if p.exists():
-            return p.resolve()
+    p = root_dir / "user_preferences.yaml"
+    if p.exists():
+        return p.resolve()
 
     return None
 
